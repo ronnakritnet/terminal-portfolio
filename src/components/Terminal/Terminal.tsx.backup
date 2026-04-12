@@ -1,0 +1,467 @@
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import type { TerminalLine, TerminalProps } from './types';
+import { fileSystem } from './data/fileSystem';
+import { COMMANDS } from './data/commands';
+import { renderTerminalContent } from './utils/linkRenderer';
+import { 
+  handleWhoisCommand, 
+  handleSudoCommand, 
+  handleCatCommand, 
+  handleLsCommand, 
+  handleCdCommand, 
+  handleRoadmapCommand 
+} from './utils/commandHandlers';
+import { handleKeyDown, handleInputChange } from './utils/keyboardHandlers';
+import { useTerminalState } from './hooks/useTerminalState';
+
+// ASCII art
+export const asciiArt = `
+██████╗  ██████╗ ███╗   ██╗███╗   ██╗ █████╗ ██╗  ██╗██████╗ ██╗████████╗
+██╔══██╗██╔═══██╗████╗  ██║████╗  ██║██╔══██╗██║ ██╔╝██╔══██╗██║╚══██╔══╝
+██████╔╝██║   ██║██╔██╗ ██║██╔██╗ ██║███████║█████╔╝ ██████╔╝██║   ██║   
+██╔══██╗██║   ██║██║╚██╗██║██║╚██╗██║██╔══██╗██║██╔╝ ██╔══██╗██║   ██║   
+██║  ██║╚██████╔╝██║ ╚████║██║ ╚████║██║  ██║██║ ██╗ ██║  ██║██║   ██║   
+╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝ ╚═╝ ╚═╝  ╚═╝╚═╝   ╚═╝   
+
+Computer Engineering • Network Automation • Developer
+Uptime: ${new Date().toLocaleTimeString()} (Active Session)
+`;
+
+export const asciiArtMobile = `
+██████╗  ██████╗ ███╗   ██╗
+██╔══██╗██╔═══██╗████╗  ██║
+██████╔╝██║   ██║██╔██╗ ██║
+██╔══██╗██║   ██║██║╚██╗██║
+██║  ██║╚██████╔╝██║ ╚████║
+╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+Uptime: ${new Date().toLocaleTimeString()} (Active Session)
+`;
+
+// Terminal component
+const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
+  const {
+    lines,
+    setLines,
+    currentInput,
+    setCurrentInput,
+    suggestions,
+    setSuggestions,
+    ghostSuggestion,
+    setGhostSuggestion,
+    currentPath,
+    setCurrentPath,
+    isMobile,
+    setIsMobile,
+    toast,
+    setToast,
+    showToast,
+    checkMobile,
+    commandHistory,
+    historyIndex,
+    setHistoryIndex,
+    addToHistory
+  } = useTerminalState();
+  
+  const inputRef = useRef<HTMLInputElement>(null);
+  const terminalRef = useRef<HTMLDivElement>(null);
+
+  // Command execution logic
+  const executeCommand = useCallback((command: string) => {
+    const trimmedCommand = command.trim();
+    const parts = trimmedCommand.split(' ');
+    const mainCommand = parts[0];
+    const args = parts.slice(1);
+
+    // Capture current path for this execution
+    const executionPath = currentPath;
+
+    const newLine: TerminalLine = {
+      id: Date.now().toString(),
+      type: 'input',
+      content: trimmedCommand,
+      command: mainCommand,
+      path: executionPath
+    };
+
+    setLines(prev => [...prev, newLine]);
+
+    let output = '';
+
+    switch (mainCommand) {
+      case 'help':
+        output = `Available commands:
+${Object.entries(COMMANDS).map(([cmd, desc]) => `  ${cmd.padEnd(15)} - ${desc}`).join('\n')}
+
+Type 'help <command>' for more information.
+
+Quick Reference:
+  cat [filename]  - View file content
+  cd [directory]  - Navigate folders  
+  ls              - List directory contents
+  whois [domain]  - Professional lookup
+  clear           - Clear terminal screen`;
+        break;
+
+      case 'about':
+        output = fileSystem['about.md'].content || 'About information not found.';
+        break;
+
+      case 'projects':
+        output = `Projects:
+  📁 network-automation-cli  - Network automation tool using Python
+  🌐 ronnakrit.net           - Personal portfolio website
+
+Use 'cd projects' to explore project details.`;
+        break;
+
+      case 'skills':
+        output = fileSystem['skills.md'].content || 'Skills information not found.';
+        break;
+
+      case 'contact':
+        output = fileSystem['contact.md'].content || 'Contact information not found.';
+        break;
+
+      case 'clear':
+        setLines([]);
+        break;
+
+      case 'ls':
+        output = handleLsCommand(currentPath, fileSystem);
+        break;
+
+      case 'cd':
+        output = handleCdCommand(args, setCurrentPath, fileSystem);
+        break;
+
+      case 'cat':
+        output = handleCatCommand(args, currentPath, fileSystem);
+        break;
+
+      case 'whois':
+        output = handleWhoisCommand(args);
+        break;
+
+      case 'sudo':
+        output = handleSudoCommand(args);
+        break;
+
+      case 'roadmap':
+        output = handleRoadmapCommand();
+        break;
+
+      default:
+        output = `-bash: ${mainCommand}: command not found\nType 'help' for available commands.`;
+        break;
+    }
+
+    if (output) {
+      const outputLine: TerminalLine = {
+        id: (Date.now() + 1).toString(),
+        type: 'output',
+        content: output
+      };
+      setLines(prev => [...prev, outputLine]);
+    }
+
+    // Add to command history
+    addToHistory(trimmedCommand);
+    setCurrentInput('');
+    setSuggestions([]);
+    setGhostSuggestion('');
+  }, [currentPath, fileSystem, addToHistory]);
+
+  // Auto-scroll functionality
+  useEffect(() => {
+    if (terminalRef.current) {
+      setTimeout(() => {
+        terminalRef.current!.scrollTop = terminalRef.current!.scrollHeight;
+      }, 50);
+    }
+    
+    // Also scroll window to bottom as fallback
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, 100);
+  }, [currentPath]);
+
+  useEffect(() => {
+    if (terminalRef.current) {
+      setTimeout(() => {
+        terminalRef.current!.scrollTop = terminalRef.current!.scrollHeight;
+      }, 50);
+    }
+    
+    // Also scroll window to bottom as fallback
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, 100);
+  }, [suggestions]);
+
+  useEffect(() => {
+    if (terminalRef.current) {
+      setTimeout(() => {
+        terminalRef.current!.scrollTop = terminalRef.current!.scrollHeight;
+      }, 50);
+    }
+    
+    // Also scroll window to bottom as fallback
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, 100);
+  }, [lines]);
+
+  // Initial welcome message
+  useEffect(() => {
+    const welcomeMessage: TerminalLine = {
+      id: Date.now().toString(),
+      type: 'output',
+      content: isMobile ? asciiArtMobile : asciiArt
+    };
+    setLines([welcomeMessage]);
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [isMobile]);
+
+  // Handle external command
+  useEffect(() => {
+    if (externalCommand) {
+      executeCommand(externalCommand);
+    }
+  }, [externalCommand, executeCommand]);
+
+  // Mobile command execution with feedback
+  const executeMobileCommand = useCallback((command: string) => {
+    // Show executing feedback as toast
+    showToast(`Executing: ${command}...`);
+    
+    // Execute the actual command after a brief delay
+    setTimeout(() => {
+      executeCommand(command);
+    }, 300);
+  }, [executeCommand, showToast]);
+
+  // Input handling using modular keyboard handler
+  const handleInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    handleKeyDown(
+      e,
+      currentInput,
+      setCurrentInput,
+      setSuggestions,
+      commandHistory,
+      historyIndex,
+      setHistoryIndex,
+      setGhostSuggestion,
+      executeCommand,
+      ghostSuggestion
+    );
+  };
+
+  const handleInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleInputChange(e, setCurrentInput, setGhostSuggestion);
+  };
+
+  return (
+    <div className="min-h-screen bg-black text-green-400 font-mono">
+      {/* Linux/Ubuntu Terminal Header */}
+      <div className="bg-gray-900 border-b border-gray-700 px-4 py-2">
+        <div className="flex items-center justify-between">
+          {/* Left side - Empty for clean look */}
+          <div className="w-24"></div>
+          
+          {/* Center - Terminal Title */}
+          <div className="flex items-center space-x-2">
+            <span className="text-gray-400 text-sm font-medium">ronnakrit@portfolio:</span>
+            <span className="text-blue-400 text-sm font-medium">~</span>
+          </div>
+          
+          {/* Right side - Control Buttons */}
+          <div className="flex items-center space-x-2">
+            <button 
+              className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-400 transition-colors duration-200"
+              title="Minimize"
+              aria-label="Minimize"
+            />
+            <button 
+              className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-400 transition-colors duration-200"
+              title="Maximize"
+              aria-label="Maximize"
+            />
+            <button 
+              className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 transition-colors duration-200"
+              title="Close"
+              aria-label="Close"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Executing Toast Notification */}
+      {toast && (
+        <div 
+          className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-gray-900 text-green-400 px-4 py-2 rounded-lg shadow-lg border border-green-700 z-50 transition-all duration-300 ease-in-out font-mono text-sm"
+          style={{ 
+            backgroundColor: '#1a1a1a',
+            borderColor: '#16a34a',
+            animation: 'fadeInOut 2s ease-in-out'
+          }}
+        >
+          {toast}
+        </div>
+      )}
+
+      {/* Terminal Container */}
+      <div className="flex-1 flex justify-center px-4 py-6">
+        <div className="w-full max-w-6xl mx-auto">
+          {/* Terminal Content */}
+          <div 
+            ref={terminalRef}
+            className="overflow-y-auto px-6 py-4 pb-8"
+            style={{ backgroundColor: 'var(--terminal-bg)' }}
+          >
+            {lines.map((line) => {
+              return (
+                <div key={line.id} className="mb-2">
+                  {line.type === 'input' && (
+                    <div className="flex items-center">
+                      <span style={{ color: 'var(--terminal-green)' }}>
+                        ronnakrit@portfolio
+                      </span>
+                      <span className="mx-1 text-white">:</span>
+                      <span style={{ color: 'var(--terminal-blue)' }}>
+                        {line.path || '~'}
+                      </span>
+                      <span className="mx-1 text-white">$</span>
+                      <span className="ml-2 text-white">{line.content}</span>
+                    </div>
+                  )}
+                  {line.type === 'output' && (
+                    <pre 
+                      className={`whitespace-pre-wrap text-sm ${line.content.includes('███') ? 'ascii-art' : ''}`}
+                      style={{ color: 'var(--terminal-light-green)' }}
+                      dangerouslySetInnerHTML={{
+                        __html: renderTerminalContent(line.content)
+                      }}
+                    />
+                  )}
+                  {line.type === 'error' && (
+                    <pre 
+                      className="whitespace-pre-wrap text-sm"
+                      style={{ color: '#ff6b6b' }}
+                    >
+                      {renderTerminalContent(line.content)}
+                    </pre>
+                  )}
+                </div>
+              );
+            })}
+            
+            {/* Current Input Line - Inside Terminal Container */}
+            <div className="flex items-center">
+              <span style={{ color: 'var(--terminal-green)' }}>
+                ronnakrit@portfolio
+              </span>
+              <span className="mx-1 text-white">:</span>
+              <span style={{ color: 'var(--terminal-blue)' }}>
+                {currentPath}
+              </span>
+              <span className="mx-1 text-white">$</span>
+              <div className="flex-1 relative ml-2 min-w-0">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={currentInput}
+                  onChange={handleInputChangeHandler}
+                  onKeyDown={handleInput}
+                  className="w-full bg-transparent outline-none text-white"
+                  style={{ color: 'var(--terminal-white)' }}
+                  placeholder={currentInput.length === 0 ? "Type a command..." : ""}
+                  data-ghost-suggestion={ghostSuggestion}
+                />
+                {/* Ghost Suggestion */}
+                {ghostSuggestion && (
+                  <span 
+                    className="absolute left-0 top-0 pointer-events-none text-gray-500"
+                    style={{ 
+                      color: 'var(--terminal-gray)',
+                      opacity: 0.5
+                    }}
+                  >
+                    {ghostSuggestion}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Mobile Command Toolbar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-700 px-4 py-3 z-50 lg:hidden">
+        <div className="flex overflow-x-auto scrollbar-hide"
+             style={{ 
+               scrollbarWidth: 'none',
+               msOverflowStyle: 'none'
+             }}
+          >
+            <button
+              onClick={() => executeMobileCommand('about')}
+              className="px-3 py-1 mr-2 bg-gray-800 text-green-400 border border-green-600 rounded text-sm font-mono whitespace-nowrap"
+            >
+              About
+            </button>
+            <button
+              onClick={() => executeMobileCommand('skills')}
+              className="px-3 py-1 mr-2 bg-gray-800 text-green-400 border border-green-600 rounded text-sm font-mono whitespace-nowrap"
+            >
+              Skills
+            </button>
+            <button
+              onClick={() => executeMobileCommand('projects')}
+              className="px-3 py-1 mr-2 bg-gray-800 text-green-400 border border-green-600 rounded text-sm font-mono whitespace-nowrap"
+            >
+              Projects
+            </button>
+            <button
+              onClick={() => executeMobileCommand('roadmap')}
+              className="px-3 py-1 mr-2 bg-gray-800 text-green-400 border border-green-600 rounded text-sm font-mono whitespace-nowrap"
+            >
+              Roadmap
+            </button>
+            <button
+              onClick={() => executeMobileCommand('contact')}
+              className="px-3 py-1 mr-2 bg-gray-800 text-green-400 border border-green-600 rounded text-sm font-mono whitespace-nowrap"
+            >
+              Contact
+            </button>
+            <button
+              onClick={() => executeMobileCommand('help')}
+              className="px-3 py-1 bg-gray-800 text-green-400 border border-green-600 rounded text-sm font-mono whitespace-nowrap"
+            >
+              Help
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Terminal;

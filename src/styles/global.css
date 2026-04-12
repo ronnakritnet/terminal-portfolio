@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --terminal-bg: #0D0D0D;
+    --terminal-green: #00FF00;
+    --terminal-blue: #0080FF;
+    --terminal-gray: #666666;
+    --terminal-light-green: #90EE90;
+    --terminal-white: #F0F0F0;
+  }
+  
+  * {
+    font-family: 'Courier New', monospace;
+  }
+  
+  body {
+    background-color: var(--terminal-bg);
+    color: var(--terminal-green);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+  
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  
+  .cursor-blink {
+    animation: blink 1s infinite;
+  }
+  
+  .typing-animation {
+    animation: typing 0.5s steps(30, end);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  
+  .ascii-art {
+    font-family: 'Courier New', monospace;
+    font-size: clamp(8px, 2vw, 12px);
+    line-height: 1.2;
+    white-space: pre;
+    overflow-x: auto;
+    max-width: 100%;
+    tab-size: 4;
+  }
+  
+  @media (max-width: 768px) {
+    .ascii-art {
+      font-size: clamp(6px, 3vw, 8px);
+      line-height: 1.1;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .ascii-art {
+      font-size: clamp(5px, 4vw, 7px);
+      line-height: 1.0;
+    }
+  }
+}

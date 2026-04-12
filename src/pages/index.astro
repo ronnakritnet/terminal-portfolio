@@ -1,0 +1,73 @@
+---
+import '../styles/global.css';
+import App from '../components/App';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="generator" content={Astro.generator} />
+		
+		<!-- SEO Meta Tags -->
+		<title>ronnakrit.net > terminal</title>
+		<meta name="description" content="Computer Engineering student specializing in Network Engineering, System Administration, and Full-stack Development. Interactive terminal-style portfolio showcasing projects and skills." />
+		<meta name="keywords" content="Ronnakrit, Computer Engineering, Network Engineer, Portfolio, CLI, Terminal, Network Automation, Python, Cisco, MikroTik" />
+		<meta name="author" content="Ronnakrit W." />
+		
+		<!-- Open Graph Meta Tags -->
+		<meta property="og:title" content="ronnakrit.net > terminal" />
+		<meta property="og:description" content="Computer Engineering student specializing in Network Engineering, System Administration, and Full-stack Development. Interactive terminal-style portfolio." />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://ronnakrit.net" />
+		<meta property="og:image" content="https://ronnakrit.net/og-image.png" />
+		<meta property="og:image:alt" content="ronnakrit.net > terminal" />
+		<meta property="og:site_name" content="ronnakrit.net" />
+		
+		<!-- Twitter Card Meta Tags -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="ronnakrit.net > terminal" />
+		<meta name="twitter:description" content="Computer Engineering student specializing in Network Engineering, System Administration, and Full-stack Development. Interactive terminal-style portfolio." />
+		<meta name="twitter:image" content="https://ronnakrit.net/og-image.png" />
+		<meta name="twitter:image:alt" content="ronnakrit.net > terminal" />
+		
+		<!-- LinkedIn Meta Tags -->
+		<meta property="linkedin:owner" content="ronnakrit" />
+		<meta property="linkedin:company" content="ronnakrit.net" />
+		
+		<!-- Additional SEO -->
+		<meta name="robots" content="index, follow" />
+		<meta name="language" content="English" />
+		<meta name="theme-color" content="#0D0D0D" />
+		
+		<!-- Structured Data -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Ronnakrit W.",
+			"jobTitle": "Computer Engineering Student",
+			"description": "Computer Engineering student specializing in Network Engineering, System Administration, and Full-stack Development.",
+			"url": "https://ronnakrit.net",
+			"email": "contact@ronnakrit.net",
+			"knowsAbout": ["Network Engineering", "Computer Engineering", "Python", "Cisco", "MikroTik", "Linux", "System Administration", "Full-stack Development"],
+			"alumniOf": {
+				"@type": "EducationalOrganization",
+				"name": "University"
+			},
+			"sameAs": [
+				"https://github.com/ronnakrit",
+				"https://linkedin.com/in/ronnakrit"
+			]
+		}
+		</script>
+	</head>
+	<body>
+		<div id="app">
+			<App client:load />
+		</div>
+	</body>
+</html>

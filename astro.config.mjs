@@ -7,6 +7,9 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://ronnakrit.net',
+  base: '/',
+  
   integrations: [react()],
 
   vite: {
@@ -15,7 +18,6 @@ export default defineConfig({
   
   // GitHub Pages configuration
   output: 'static',
-  base: '/',
   build: {
     format: 'directory'
   },

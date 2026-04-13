@@ -85,10 +85,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCommandExecute }) => {
         <div className="flex flex-row items-start justify-between space-y-0">
           {/* Logo/Title */}
           <div className="flex items-start space-x-2">
-            <span className="text-green-400 font-mono text-lg">ronnakrit@portfolio</span>
-            <span className="text-gray-400">:</span>
-            <span className="text-blue-400">~</span>
-            <span className="text-gray-400">$</span>
+            <a href="/" className="text-green-400 font-mono text-lg font-bold hover:text-green-300 transition-colors">
+              ronnakrit.net
+            </a>
           </div>
 
           {/* Navigation Buttons */}

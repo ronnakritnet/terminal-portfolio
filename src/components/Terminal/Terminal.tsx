@@ -267,40 +267,7 @@ Use 'cat [filename]' to explore project details.`;
   };
 
   return (
-    <div className="flex-1 bg-black text-green-400 font-mono flex flex-col">
-      {/* Linux/Ubuntu Terminal Header */}
-      <div className="bg-gray-900 border-b border-gray-700 px-4 py-2">
-        <div className="flex items-center justify-between">
-          {/* Left side - Empty for clean look */}
-          <div className="w-24"></div>
-          
-          {/* Center - Terminal Title */}
-          <div className="flex items-center space-x-2">
-            <span className="text-gray-400 text-sm font-medium">ronnakrit@portfolio:</span>
-            <span className="text-blue-400 text-sm font-medium">~</span>
-          </div>
-          
-          {/* Right side - Control Buttons */}
-          <div className="flex items-center space-x-2">
-            <button 
-              className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-400 transition-colors duration-200"
-              title="Minimize"
-              aria-label="Minimize"
-            />
-            <button 
-              className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-400 transition-colors duration-200"
-              title="Maximize"
-              aria-label="Maximize"
-            />
-            <button 
-              className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 transition-colors duration-200"
-              title="Close"
-              aria-label="Close"
-            />
-          </div>
-        </div>
-      </div>
-
+    <div className="flex-1 bg-black text-green-400 font-mono flex flex-col border-t border-gray-800">
       {/* Executing Toast Notification */}
       {toast && (
         <div 
@@ -316,7 +283,7 @@ Use 'cat [filename]' to explore project details.`;
       )}
 
       {/* Terminal Container */}
-      <div className="flex-1 flex px-4 py-6 pt-16 overflow-y-auto">
+      <div className="flex-1 flex px-4 py-6 pt-20 overflow-y-auto">
         <div className="w-full max-w-5xl mx-auto">
           {/* Terminal Content */}
           <div 

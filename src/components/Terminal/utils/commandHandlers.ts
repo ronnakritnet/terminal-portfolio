@@ -34,12 +34,18 @@ export const handleCatCommand = (args: string[], currentPath: string, fileSystem
   const filename = args[0];
   let fileContent = '';
   
-  // Handle path parsing (e.g., projects/filename.md)
+  // Handle path parsing (e.g., projects/filename.md or certs/filename.md)
   if (filename.includes('/')) {
     const [directory, file] = filename.split('/');
     if (directory === 'projects' && fileSystem['projects']?.children) {
       if (fileSystem['projects'].children[file]) {
         fileContent = fileSystem['projects'].children[file].content || '';
+      } else {
+        return `-bash: cat: ${filename}: No such file or directory`;
+      }
+    } else if (directory === 'certs' && fileSystem['certs']?.children) {
+      if (fileSystem['certs'].children[file]) {
+        fileContent = fileSystem['certs'].children[file].content || '';
       } else {
         return `-bash: cat: ${filename}: No such file or directory`;
       }
@@ -53,6 +59,12 @@ export const handleCatCommand = (args: string[], currentPath: string, fileSystem
     } else if (currentPath === 'projects' && fileSystem['projects']?.children) {
       if (fileSystem['projects'].children[filename]) {
         fileContent = fileSystem['projects'].children[filename].content || '';
+      } else {
+        return `-bash: cat: ${filename}: No such file or directory`;
+      }
+    } else if (currentPath === 'certs' && fileSystem['certs']?.children) {
+      if (fileSystem['certs'].children[filename]) {
+        fileContent = fileSystem['certs'].children[filename].content || '';
       } else {
         return `-bash: cat: ${filename}: No such file or directory`;
       }
@@ -81,6 +93,13 @@ export const handleLsCommand = (currentPath: string, fileSystem: FileSystem): st
         return obj.type === 'directory' ? `📁 ${item}/` : `📄 ${item}`;
       })
       .join('\n');
+  } else if (currentPath === 'certs' && fileSystem['certs']?.children) {
+    return Object.keys(fileSystem['certs'].children)
+      .map(item => {
+        const obj = fileSystem['certs'].children![item];
+        return obj.type === 'directory' ? `📁 ${item}/` : `📄 ${item}`;
+      })
+      .join('\n');
   }
   
   return 'Directory is empty.';
@@ -95,6 +114,9 @@ export const handleCdCommand = (args: string[], setCurrentPath: React.Dispatch<R
   const target = args[0];
   if (target === 'projects' && fileSystem['projects']) {
     setCurrentPath('projects');
+    return '';
+  } else if (target === 'certs' && fileSystem['certs']) {
+    setCurrentPath('certs');
     return '';
   } else if (target === '..') {
     setCurrentPath('~');

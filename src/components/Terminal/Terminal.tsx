@@ -101,6 +101,14 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
 Use 'cat [filename]' to explore project details.`;
         break;
 
+      case 'certs':
+        output = `CERTIFICATIONS:
+  📄 google_it_support.md          - Google IT Support Professional Certificate
+  📄 google_cybersecurity.md       - Google Cybersecurity Professional Certificate
+
+Use 'cat [filename]' to explore certification details.`;
+        break;
+
       case 'skills':
         output = fileSystem['skills.md'].content || 'Skills information not found.';
         break;

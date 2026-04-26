@@ -126,5 +126,42 @@ PHASE 2: PROFESSIONAL (2027)
 
 PROGRESS (PHASE 1): [██████████░░░░░░░░░░] 50%
 `
+  },
+  'certs': {
+    type: 'directory',
+    children: {
+      'google_it_support.md': {
+        type: 'file',
+        content: `
+CERTIFICATION: GOOGLE IT SUPPORT PROFESSIONAL CERTIFICATE
+
+Provider: Coursera
+Status: Completed
+
+SKILLS LEARNED:
+- Troubleshooting
+- Operating Systems
+- System Administration
+- Network Protocols
+- Security
+`
+      },
+      'google_cybersecurity.md': {
+        type: 'file',
+        content: `
+CERTIFICATION: GOOGLE CYBERSECURITY PROFESSIONAL CERTIFICATE
+
+Provider: Coursera
+Status: Completed
+
+SKILLS LEARNED:
+- Threat Analysis
+- Python
+- SQL
+- SIEM Tools
+- Incident Response
+`
+      }
+    }
   }
 };

@@ -6,6 +6,7 @@ export const COMMANDS_DESC = {
   skills:   'Show technical skills & certifications',
   roadmap:  'Display educational & professional journey',
   contact:  'Show contact information & social links',
+  certs:    'List professional certifications',
   
   // System Group
   ls:       'List directory contents',

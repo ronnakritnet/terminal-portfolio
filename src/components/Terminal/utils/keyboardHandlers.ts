@@ -1,6 +1,6 @@
 import React from 'react';
 import { COMMANDS_DESC } from '../data/commands';
-import { getFirstContextualMatch, getContextualCompletions } from './autocompleteUtils';
+import { getFirstContextualMatch, getContextualCompletions, parseCommandContext } from './autocompleteUtils';
 import type { FileSystem } from '../types';
 
 // Get first matching command (same logic as ghost suggestion)
@@ -45,7 +45,15 @@ export const handleTabCompletion = (
   setSuggestions: (suggestions: string[]) => void,
   setGhostSuggestion: (value: string) => void
 ): void => {
-  // Get contextual completions
+  // First, try to accept ghost suggestion if it exists (same as Right Arrow)
+  const ghostMatch = getFirstContextualMatch(currentInput, currentPath, fileSystem);
+  if (ghostMatch && ghostMatch !== currentInput) {
+    setCurrentInput(ghostMatch);
+    setGhostSuggestion('');
+    return;
+  }
+  
+  // If no ghost suggestion, get all contextual completions
   const completions = getContextualCompletions(currentInput, currentPath, fileSystem);
   
   // If only one match, complete immediately
@@ -69,21 +77,6 @@ export const handleTabCompletion = (
     setSuggestions(simpleMatches);
     setTimeout(() => setSuggestions([]), 2000);
   }
-};
-
-// Parse command context from input
-const parseCommandContext = (input: string): { command: string | null; remaining: string } => {
-  const trimmedInput = input.trim();
-  
-  if (!trimmedInput) {
-    return { command: null, remaining: '' };
-  }
-  
-  const parts = trimmedInput.split(' ');
-  const command = parts[0];
-  const remaining = parts.slice(1).join(' ');
-  
-  return { command, remaining };
 };
 
 // History navigation logic

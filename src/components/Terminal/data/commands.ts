@@ -12,6 +12,7 @@ export const COMMANDS_DESC = {
   ls:       'List directory contents',
   cd:       'Change directory',
   cat:      'Display file contents',
+  tree:     'Display directory tree structure',
   
   // Utility Group
   whois:    'Domain lookup utility',

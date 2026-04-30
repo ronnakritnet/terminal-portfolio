@@ -8,7 +8,8 @@ import {
   handleSudoCommand, 
   handleCatCommand, 
   handleLsCommand, 
-  handleCdCommand
+  handleCdCommand,
+  handleTreeCommand
 } from './utils/commandHandlers';
 import { handleKeyDown, handleInputChange } from './utils/keyboardHandlers';
 import { useTerminalState } from './hooks/useTerminalState';
@@ -132,6 +133,10 @@ Use 'cat [filename]' to explore certification details.`;
 
       case 'cat':
         output = handleCatCommand(args, currentPath, fileSystem);
+        break;
+
+      case 'tree':
+        output = handleTreeCommand(currentPath, fileSystem);
         break;
 
       case 'whois':
@@ -259,6 +264,8 @@ Use 'cat [filename]' to explore certification details.`;
     handleKeyDown(
       e,
       currentInput,
+      currentPath,
+      fileSystem,
       setCurrentInput,
       setSuggestions,
       history,
@@ -271,7 +278,7 @@ Use 'cat [filename]' to explore certification details.`;
   };
 
   const handleInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleInputChange(e, setCurrentInput, setGhostSuggestion);
+    handleInputChange(e, currentPath, fileSystem, setCurrentInput, setGhostSuggestion);
   };
 
   return (

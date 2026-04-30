@@ -1,6 +1,7 @@
 import type { FileSystem, CommandValidation } from '../types';
 import { COMMAND_RESPONSES } from '../data/responses';
 import { validateArgs } from './validators';
+import { getFileContent, listDirectory, changeDirectory, getDirectoryContents, sortItems } from './fileSystemUtils';
 
 // Command handlers
 export const handleWhoisCommand = (args: string[]): string => {
@@ -32,96 +33,93 @@ export const handleCatCommand = (args: string[], currentPath: string, fileSystem
   }
   
   const filename = args[0];
-  let fileContent = '';
-  
-  // Handle path parsing (e.g., projects/filename.md or certs/filename.md)
-  if (filename.includes('/')) {
-    const [directory, file] = filename.split('/');
-    if (directory === 'projects' && fileSystem['projects']?.children) {
-      if (fileSystem['projects'].children[file]) {
-        fileContent = fileSystem['projects'].children[file].content || '';
-      } else {
-        return `-bash: cat: ${filename}: No such file or directory`;
-      }
-    } else if (directory === 'certs' && fileSystem['certs']?.children) {
-      if (fileSystem['certs'].children[file]) {
-        fileContent = fileSystem['certs'].children[file].content || '';
-      } else {
-        return `-bash: cat: ${filename}: No such file or directory`;
-      }
-    } else {
-      return `-bash: cat: ${filename}: No such file or directory`;
-    }
-  } else {
-    // Existing logic for current directory files
-    if (currentPath === '~' && fileSystem[filename]) {
-      fileContent = fileSystem[filename].content || '';
-    } else if (currentPath === 'projects' && fileSystem['projects']?.children) {
-      if (fileSystem['projects'].children[filename]) {
-        fileContent = fileSystem['projects'].children[filename].content || '';
-      } else {
-        return `-bash: cat: ${filename}: No such file or directory`;
-      }
-    } else if (currentPath === 'certs' && fileSystem['certs']?.children) {
-      if (fileSystem['certs'].children[filename]) {
-        fileContent = fileSystem['certs'].children[filename].content || '';
-      } else {
-        return `-bash: cat: ${filename}: No such file or directory`;
-      }
-    }
-  }
-
-  if (fileContent) {
-    return fileContent;
-  } else {
-    return `-bash: cat: ${filename}: No such file or directory`;
-  }
+  return getFileContent(filename, currentPath, fileSystem);
 };
 
 export const handleLsCommand = (currentPath: string, fileSystem: FileSystem): string => {
-  if (currentPath === '~') {
-    return Object.keys(fileSystem)
-      .map(item => {
-        const obj = fileSystem[item];
-        return obj.type === 'directory' ? `📁 ${item}/` : `📄 ${item}`;
-      })
-      .join('\n');
-  } else if (currentPath === 'projects' && fileSystem['projects']?.children) {
-    return Object.keys(fileSystem['projects'].children)
-      .map(item => {
-        const obj = fileSystem['projects'].children![item];
-        return obj.type === 'directory' ? `📁 ${item}/` : `📄 ${item}`;
-      })
-      .join('\n');
-  } else if (currentPath === 'certs' && fileSystem['certs']?.children) {
-    return Object.keys(fileSystem['certs'].children)
-      .map(item => {
-        const obj = fileSystem['certs'].children![item];
-        return obj.type === 'directory' ? `📁 ${item}/` : `📄 ${item}`;
-      })
-      .join('\n');
-  }
-  
-  return 'Directory is empty.';
+  return listDirectory(currentPath, fileSystem);
 };
 
 export const handleCdCommand = (args: string[], setCurrentPath: React.Dispatch<React.SetStateAction<string>>, fileSystem: FileSystem): string => {
-  if (args.length === 0) {
-    setCurrentPath('~');
-    return '';
-  }
-  
   const target = args[0];
-  if (target === 'projects' && fileSystem['projects']) {
-    setCurrentPath('projects');
-    return '';
-  } else if (target === 'certs' && fileSystem['certs']) {
-    setCurrentPath('certs');
-    return '';
-  } else if (target === '..') {
-    setCurrentPath('~');
-    return '';
+  const result = changeDirectory(target, '', fileSystem);
+  
+  if (result.error) {
+    return result.error;
   }
   
-  return `-bash: cd: ${target}: No such directory`;
+  setCurrentPath(result.path);
+  return '';
+};
+
+/**
+ * Recursive function to generate ASCII tree structure
+ * @param items - Array of item names
+ * @param fileSystem - The file system object
+ * @param prefix - Current prefix for tree lines
+ * @param parentPrefixes - Array of booleans indicating which parent levels need vertical lines
+ * @returns Formatted tree string
+ */
+const generateTree = (
+  items: string[],
+  fileSystem: FileSystem,
+  prefix: string = '',
+  parentPrefixes: boolean[] = []
+): string => {
+  let result = '';
+  
+  items.forEach((item, index) => {
+    const isLastItem = index === items.length - 1;
+    const connector = isLastItem ? '└── ' : '├── ';
+    
+    const obj = fileSystem[item];
+    const icon = obj?.type === 'directory' ? '📁' : '📄';
+    const suffix = obj?.type === 'directory' ? '/' : '';
+    
+    result += `${prefix}${connector}${icon} ${item}${suffix}\n`;
+    
+    // If directory, recursively add children
+    if (obj?.type === 'directory' && obj.children) {
+      const children = Object.keys(obj.children);
+      // Build the new prefix for children
+      const newParentPrefixes = [...parentPrefixes, !isLastItem];
+      const newPrefix = newParentPrefixes
+        .map(shouldContinue => shouldContinue ? '│   ' : '    ')
+        .join('');
+      
+      result += generateTree(children, obj.children, newPrefix, newParentPrefixes);
+    }
+  });
+  
+  return result;
+};
+
+export const handleTreeCommand = (currentPath: string, fileSystem: FileSystem): string => {
+  let targetPath = currentPath;
+  let targetFileSystem = fileSystem;
+  
+  // Resolve the target file system based on current path
+  if (currentPath === 'projects' && fileSystem['projects']?.children) {
+    targetFileSystem = fileSystem['projects'].children;
+    targetPath = 'projects';
+  } else if (currentPath === 'certs' && fileSystem['certs']?.children) {
+    targetFileSystem = fileSystem['certs'].children;
+    targetPath = 'certs';
+  } else {
+    targetFileSystem = fileSystem;
+    targetPath = '~';
+  }
+  
+  const items = Object.keys(targetFileSystem);
+  
+  if (items.length === 0) {
+    return 'Directory is empty.';
+  }
+  
+  // Sort items using standardized sorting utility
+  const sortedItems = sortItems(items, targetFileSystem);
+  
+  const tree = generateTree(sortedItems, targetFileSystem);
+  
+  return `${targetPath}/\n${tree}`;
 };

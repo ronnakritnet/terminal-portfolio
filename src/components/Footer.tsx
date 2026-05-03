@@ -9,7 +9,7 @@ const Footer: React.FC = () => {
   }, []);
 
   return (
-    <footer className="bg-gray-900 border-t border-gray-700 px-4 py-3">
+    <footer className="hidden md:block bg-gray-900 border-t border-gray-700 px-4 py-3">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0 md:space-x-4">
           <div className="text-gray-400 text-sm">
@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
           </div>
           <div className="flex space-x-4">
             <a 
-              href="https://github.com/ronnakrit" 
+              href="https://github.com/ronnakritnet" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-green-400 transition-colors duration-200"
@@ -25,7 +25,7 @@ const Footer: React.FC = () => {
               GitHub
             </a>
             <a 
-              href="https://linkedin.com/in/ronnakrit" 
+              href="https://linkedin.com/in/ronnakritnet" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-green-400 transition-colors duration-200"

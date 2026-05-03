@@ -10,8 +10,14 @@
     --terminal-white: #F0F0F0;
   }
   
+  html {
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+  }
+  
   * {
-    font-family: 'Courier New', monospace;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
   
   body {
@@ -43,26 +49,15 @@
   }
   
   .ascii-art {
-    font-family: 'Courier New', monospace;
-    font-size: clamp(8px, 2vw, 12px);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 12px;
     line-height: 1.2;
-    white-space: pre;
+    white-space: pre-wrap;
     overflow-x: auto;
     max-width: 100%;
     tab-size: 4;
-  }
-  
-  @media (max-width: 768px) {
-    .ascii-art {
-      font-size: clamp(6px, 3vw, 8px);
-      line-height: 1.1;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .ascii-art {
-      font-size: clamp(5px, 4vw, 7px);
-      line-height: 1.0;
-    }
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
   }
 }

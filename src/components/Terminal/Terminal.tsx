@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import type { TerminalLine, TerminalProps } from './types';
+import type { TerminalLine, TerminalProps, PathArray } from './types';
 import { fileSystem } from './data/fileSystem';
 import { COMMANDS_DESC, HELP_OUTPUT } from './data/commands';
 import { renderTerminalContent } from './utils/linkRenderer';
@@ -13,6 +13,7 @@ import {
 } from './utils/commandHandlers';
 import { handleKeyDown, handleInputChange } from './utils/keyboardHandlers';
 import { useTerminalState } from './hooks/useTerminalState';
+import { pathArrayToString } from './utils/pathUtils';
 import ASCIIBanner from './ASCIIBanner';
 
 // ASCII art (moved to constants/ascii.ts)
@@ -71,7 +72,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     setGhostSuggestion('');
 
     // Capture current path for this execution
-    const executionPath = currentPath;
+    const executionPath = pathArrayToString(currentPath);
 
     const newLine: TerminalLine = {
       id: Date.now().toString(),
@@ -128,7 +129,7 @@ Use 'cat [filename]' to explore certification details.`;
         break;
 
       case 'cd':
-        output = handleCdCommand(args, setCurrentPath, fileSystem);
+        output = handleCdCommand(args, currentPath, setCurrentPath, fileSystem);
         break;
 
       case 'cat':
@@ -353,7 +354,7 @@ Use 'cat [filename]' to explore certification details.`;
               </span>
               <span className="mx-1 text-white">:</span>
               <span style={{ color: 'var(--terminal-blue)' }}>
-                {currentPath}
+                {pathArrayToString(currentPath)}
               </span>
               <span className="mx-1 text-white">$</span>
               <div className="flex-1 relative ml-2 min-w-0">

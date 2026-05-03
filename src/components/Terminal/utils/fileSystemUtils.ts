@@ -1,4 +1,5 @@
-import type { FileSystem } from '../types';
+import type { FileSystem, CommandResult, PathArray } from '../types';
+import { resolveRelativePath } from './pathUtils';
 
 /**
  * Standardized sorting utility for file system items
@@ -22,216 +23,365 @@ export const sortItems = (items: string[], fileSystem: FileSystem): string[] => 
 };
 
 /**
- * Get file content with path parsing support
- * Supports both relative paths (from current directory) and absolute paths (from root)
- * @param inputPath - The path to resolve (e.g., "filename.md", "projects/filename.md")
- * @param currentPath - Current directory path (e.g., "~", "projects", "certs")
+ * Dynamic path resolver - recursively traverses fileSystem to find target node
+ * @param pathString - Path string to resolve (e.g., "projects", "certs/google_it_support.md")
+ * @param currentPathArray - Current path array (e.g., ['projects'])
  * @param fileSystem - The file system object
- * @returns File content string or error message
+ * @returns CommandResult with node or error
+ */
+export const resolvePath = (
+  pathString: string,
+  currentPathArray: PathArray,
+  fileSystem: FileSystem
+): CommandResult<{ node: any; remainingPath: PathArray }> => {
+  
+  // 1. Prepare working path array
+  let workingPathArray: PathArray;
+  const normalizedPath = pathString ? pathString.trim() : '';
+  const isAbsolute = normalizedPath.startsWith('~') || normalizedPath.startsWith('/');
+  
+  if (isAbsolute) {
+    workingPathArray = [];
+  } else {
+    workingPathArray = [...currentPathArray];
+  }
+
+  // 2. Handle navigation segments (.. and .)
+  const pathSegments = normalizedPath.split('/').filter(Boolean);
+  for (const segment of pathSegments) {
+    if (segment === '..') {
+      if (workingPathArray.length > 0) workingPathArray.pop();
+    } else if (segment === '.' || segment === '~') {
+      continue;
+    } else {
+      workingPathArray.push(segment);
+    }
+  }
+
+  // 3. Start traversal from a Virtual Root to maintain consistent node structure
+  let currentNode: any = { type: 'directory', children: fileSystem };
+
+  for (const segment of workingPathArray) {
+    // Ensure current node is a directory before moving deeper
+    if (currentNode.type !== 'directory' || !currentNode.children) {
+       return { success: false, error: `-bash: ${pathString}: Not a directory` };
+    }
+
+    const nextNode = currentNode.children[segment];
+    if (!nextNode) {
+      return { success: false, error: `-bash: ${pathString}: No such file or directory` };
+    }
+    currentNode = nextNode;
+  }
+
+  // 4. Return the actual node (which now correctly contains .type and .children)
+  return {
+    success: true,
+    data: { node: currentNode, remainingPath: workingPathArray }
+  };
+};
+
+/**
+ * Get file content with dynamic path resolution
+ * @param inputPath - The path to resolve (e.g., "filename.md", "projects/filename.md")
+ * @param currentPathArray - Current path array (e.g., ['projects'])
+ * @param fileSystem - The file system object
+ * @returns CommandResult with file content or error
  */
 export const getFileContent = (
   inputPath: string,
-  currentPath: string,
+  currentPathArray: PathArray,
   fileSystem: FileSystem
-): string => {
-  if (!inputPath) return 'cat: missing file operand\nTry \'cat --help\' for more information.';
-
-  let fileContent = '';
-
-  // Handle path parsing (e.g., projects/filename.md or certs/filename.md)
-  if (inputPath.includes('/')) {
-    const [directory, file] = inputPath.split('/');
-    if (directory === 'projects' && fileSystem['projects']?.children) {
-      if (fileSystem['projects'].children[file]) {
-        fileContent = fileSystem['projects'].children[file].content || '';
-      } else {
-        return `-bash: cat: ${inputPath}: No such file or directory`;
-      }
-    } else if (directory === 'certs' && fileSystem['certs']?.children) {
-      if (fileSystem['certs'].children[file]) {
-        fileContent = fileSystem['certs'].children[file].content || '';
-      } else {
-        return `-bash: cat: ${inputPath}: No such file or directory`;
-      }
-    } else {
-      return `-bash: cat: ${inputPath}: No such file or directory`;
-    }
-  } else {
-    // Logic for current directory files
-    if (currentPath === '~' && fileSystem[inputPath]) {
-      fileContent = fileSystem[inputPath].content || '';
-    } else if (currentPath === 'projects' && fileSystem['projects']?.children) {
-      if (fileSystem['projects'].children[inputPath]) {
-        fileContent = fileSystem['projects'].children[inputPath].content || '';
-      } else {
-        return `-bash: cat: ${inputPath}: No such file or directory`;
-      }
-    } else if (currentPath === 'certs' && fileSystem['certs']?.children) {
-      if (fileSystem['certs'].children[inputPath]) {
-        fileContent = fileSystem['certs'].children[inputPath].content || '';
-      } else {
-        return `-bash: cat: ${inputPath}: No such file or directory`;
-      }
-    }
+): CommandResult<string> => {
+  if (!inputPath) {
+    return {
+      success: false,
+      error: 'cat: missing file operand\nTry \'cat --help\' for more information.'
+    };
   }
 
-  if (fileContent) {
-    return fileContent;
-  } else {
-    return `-bash: cat: ${inputPath}: No such file or directory`;
+  const result = resolvePath(inputPath, currentPathArray, fileSystem);
+  
+  if (!result.success || !result.data) {
+    return {
+      success: false,
+      error: result.error || `-bash: cat: ${inputPath}: No such file or directory`
+    };
   }
+
+  const node = result.data.node;
+  
+  // Check if node is a file
+  if (node.type !== 'file') {
+    return {
+      success: false,
+      error: `-bash: cat: ${inputPath}: Is a directory`
+    };
+  }
+
+  return {
+    success: true,
+    data: (node.content as string) || ''
+  };
 };
 
 /**
- * List directory contents with emoji prefixes
- * @param path - Directory path to list
+ * List directory contents with emoji prefixes using dynamic path resolution
+ * @param pathString - Directory path to list (e.g., "projects", "certs")
+ * @param currentPathArray - Current path array
  * @param fileSystem - The file system object
- * @returns Formatted directory listing string
+ * @returns CommandResult with formatted directory listing or error
  */
-export const listDirectory = (path: string, fileSystem: FileSystem): string => {
-  let items: string[] = [];
-  let targetFileSystem: FileSystem;
-
-  if (path === '~') {
-    items = Object.keys(fileSystem);
-    targetFileSystem = fileSystem;
-  } else if (path === 'projects' && fileSystem['projects']?.children) {
-    items = Object.keys(fileSystem['projects'].children);
-    targetFileSystem = fileSystem['projects'].children;
-  } else if (path === 'certs' && fileSystem['certs']?.children) {
-    items = Object.keys(fileSystem['certs'].children);
-    targetFileSystem = fileSystem['certs'].children;
-  } else {
-    return 'Directory is empty.';
+export const listDirectory = (
+  pathString: string,
+  currentPathArray: PathArray,
+  fileSystem: FileSystem
+): CommandResult<string> => {
+  const result = resolvePath(pathString, currentPathArray, fileSystem);
+  
+  if (!result.success || !result.data) {
+    return {
+      success: false,
+      error: result.error || `-bash: ls: ${pathString}: No such directory`
+    };
   }
 
+  const node = result.data.node;
+  
+  // Check if node is a directory
+  if (node.type !== 'directory' || !node.children) {
+    return {
+      success: false,
+      error: `-bash: ls: ${pathString}: Not a directory`
+    };
+  }
+
+  const targetFileSystem = node.children as FileSystem;
+  const items = Object.keys(targetFileSystem);
+  
   // Sort items using standardized sorting
   const sortedItems = sortItems(items, targetFileSystem);
 
-  return sortedItems
-    .map(item => {
-      const obj = targetFileSystem[item];
-      return obj.type === 'directory' ? `📁 ${item}/` : `📄 ${item}`;
-    })
-    .join('\n');
+  return {
+    success: true,
+    data: sortedItems
+      .map(item => {
+        const obj = targetFileSystem[item];
+        return obj.type === 'directory' ? `📁 ${item}/` : `📄 ${item}`;
+      })
+      .join('\n')
+  };
 };
 
 /**
- * Validate and resolve directory change
- * @param target - Target directory
- * @param currentPath - Current directory path
+ * Validate and resolve directory change using dynamic path resolution
+ * @param target - Target directory path string
+ * @param currentPathArray - Current path array
  * @param fileSystem - The file system object
- * @returns Valid path or error message
+ * @returns CommandResult with new path array or error
  */
 export const changeDirectory = (
   target: string,
-  currentPath: string,
+  currentPathArray: PathArray,
   fileSystem: FileSystem
-): { path: string; error?: string } => {
-  if (!target) {
-    return { path: '~' };
+): CommandResult<PathArray> => {
+  // Handle empty target - go to root
+  if (!target || target === '') {
+    return {
+      success: true,
+      data: []
+    };
   }
 
-  if (target === 'projects' && fileSystem['projects']) {
-    return { path: 'projects' };
-  } else if (target === 'certs' && fileSystem['certs']) {
-    return { path: 'certs' };
-  } else if (target === '..') {
-    return { path: '~' };
+  const result = resolvePath(target, currentPathArray, fileSystem);
+  
+  if (!result.success || !result.data) {
+    return {
+      success: false,
+      error: result.error || `-bash: cd: ${target}: No such directory`
+    };
   }
 
-  return { path: currentPath, error: `-bash: cd: ${target}: No such directory` };
+  const node = result.data.node;
+  
+  // Check if node is a directory
+  if (node.type !== 'directory') {
+    return {
+      success: false,
+      error: `-bash: cd: ${target}: Not a directory`
+    };
+  }
+
+  return {
+    success: true,
+    data: result.data.remainingPath
+  };
 };
 
 /**
- * Get directory items (both files and directories)
- * @param path - Directory path
+ * Get directory items (both files and directories) using dynamic path resolution
+ * @param pathString - Directory path
+ * @param currentPathArray - Current path array
  * @param fileSystem - The file system object
- * @returns Array of directory item names
+ * @returns CommandResult with array of item names or error
  */
-export const getDirectoryContents = (path: string, fileSystem: FileSystem): string[] => {
-  if (path === '~') {
-    return Object.keys(fileSystem);
-  } else if (path === 'projects' && fileSystem['projects']?.children) {
-    return Object.keys(fileSystem['projects'].children);
-  } else if (path === 'certs' && fileSystem['certs']?.children) {
-    return Object.keys(fileSystem['certs'].children);
+export const getDirectoryContents = (
+  pathString: string,
+  currentPathArray: PathArray,
+  fileSystem: FileSystem
+): CommandResult<string[]> => {
+  const result = resolvePath(pathString, currentPathArray, fileSystem);
+  
+  if (!result.success || !result.data) {
+    return {
+      success: false,
+      error: result.error || `-bash: ${pathString}: No such directory`
+    };
   }
-  return [];
+
+  const node = result.data.node;
+  
+  // Check if node is a directory
+  if (node.type !== 'directory' || !node.children) {
+    return {
+      success: false,
+      error: `-bash: ${pathString}: Not a directory`
+    };
+  }
+
+  const targetFileSystem = node.children as FileSystem;
+  
+  return {
+    success: true,
+    data: Object.keys(targetFileSystem)
+  };
 };
 
 /**
- * Get only directories from a path
- * @param path - Directory path
+ * Get only directories from a path using dynamic path resolution
+ * @param pathString - Directory path
+ * @param currentPathArray - Current path array
  * @param fileSystem - The file system object
- * @returns Array of directory names
+ * @returns CommandResult with array of directory names or error
  */
-export const getDirectories = (path: string, fileSystem: FileSystem): string[] => {
-  if (path === '~') {
-    return Object.keys(fileSystem).filter(key => fileSystem[key].type === 'directory');
-  } else if (path === 'projects' && fileSystem['projects']?.children) {
-    return Object.keys(fileSystem['projects'].children).filter(
-      key => fileSystem['projects']!.children![key].type === 'directory'
-    );
-  } else if (path === 'certs' && fileSystem['certs']?.children) {
-    return Object.keys(fileSystem['certs'].children).filter(
-      key => fileSystem['certs']!.children![key].type === 'directory'
-    );
+export const getDirectories = (
+  pathString: string,
+  currentPathArray: PathArray,
+  fileSystem: FileSystem
+): CommandResult<string[]> => {
+  const result = resolvePath(pathString, currentPathArray, fileSystem);
+  
+  if (!result.success || !result.data) {
+    return {
+      success: false,
+      error: result.error || `-bash: ${pathString}: No such directory`
+    };
   }
-  return [];
+
+  const node = result.data.node;
+  
+  // Check if node is a directory
+  if (node.type !== 'directory' || !node.children) {
+    return {
+      success: false,
+      error: `-bash: ${pathString}: Not a directory`
+    };
+  }
+
+  const targetFileSystem = node.children as FileSystem;
+  
+  return {
+    success: true,
+    data: Object.keys(targetFileSystem).filter(key => targetFileSystem[key].type === 'directory')
+  };
 };
 
 /**
- * Get only files from a path
- * @param path - Directory path
+ * Get only files from a path using dynamic path resolution
+ * @param pathString - Directory path
+ * @param currentPathArray - Current path array
  * @param fileSystem - The file system object
- * @returns Array of file names
+ * @returns CommandResult with array of file names or error
  */
-export const getFiles = (path: string, fileSystem: FileSystem): string[] => {
-  if (path === '~') {
-    return Object.keys(fileSystem).filter(key => fileSystem[key].type === 'file');
-  } else if (path === 'projects' && fileSystem['projects']?.children) {
-    return Object.keys(fileSystem['projects'].children).filter(
-      key => fileSystem['projects']!.children![key].type === 'file'
-    );
-  } else if (path === 'certs' && fileSystem['certs']?.children) {
-    return Object.keys(fileSystem['certs'].children).filter(
-      key => fileSystem['certs']!.children![key].type === 'file'
-    );
+export const getFiles = (
+  pathString: string,
+  currentPathArray: PathArray,
+  fileSystem: FileSystem
+): CommandResult<string[]> => {
+  const result = resolvePath(pathString, currentPathArray, fileSystem);
+  
+  if (!result.success || !result.data) {
+    return {
+      success: false,
+      error: result.error || `-bash: ${pathString}: No such directory`
+    };
   }
-  return [];
+
+  const node = result.data.node;
+  
+  // Check if node is a directory
+  if (node.type !== 'directory' || !node.children) {
+    return {
+      success: false,
+      error: `-bash: ${pathString}: Not a directory`
+    };
+  }
+
+  const targetFileSystem = node.children as FileSystem;
+  
+  return {
+    success: true,
+    data: Object.keys(targetFileSystem).filter(key => targetFileSystem[key].type === 'file')
+  };
 };
 
 /**
- * Resolve a partial path to a complete path
+ * Resolve a partial path to a complete path using dynamic resolution
  * Supports paths like "certs/go" -> "certs/google_it_support.md"
  * @param inputPath - Partial or complete path
+ * @param currentPathArray - Current path array
  * @param fileSystem - The file system object
  * @returns Array of possible completions
  */
-export const resolvePathCompletions = (inputPath: string, fileSystem: FileSystem): string[] => {
+export const resolvePathCompletions = (
+  inputPath: string,
+  currentPathArray: PathArray,
+  fileSystem: FileSystem
+): string[] => {
   const completions: string[] = [];
 
-  // If no slash, complete from root
+  // If no slash, complete from current directory
   if (!inputPath.includes('/')) {
-    Object.keys(fileSystem).forEach(key => {
-      if (key.startsWith(inputPath)) {
-        completions.push(key);
+    const result = resolvePath('', currentPathArray, fileSystem);
+    if (result.success && result.data) {
+      const node = result.data.node;
+      if (node.type === 'directory' && node.children) {
+        const targetFileSystem = node.children as FileSystem;
+        Object.keys(targetFileSystem).forEach(key => {
+          if (key.startsWith(inputPath)) {
+            completions.push(key);
+          }
+        });
       }
-    });
+    }
   } else {
     // Split path into directory and partial
     const parts = inputPath.split('/');
     const dirPath = parts[0];
     const partial = parts.slice(1).join('/');
 
-    // Check if directory exists
-    if (fileSystem[dirPath] && fileSystem[dirPath].type === 'directory' && fileSystem[dirPath].children) {
-      Object.keys(fileSystem[dirPath].children).forEach(key => {
-        if (key.startsWith(partial)) {
-          completions.push(`${dirPath}/${key}`);
-        }
-      });
+    // Resolve the directory part
+    const dirResult = resolvePath(dirPath, currentPathArray, fileSystem);
+    if (dirResult.success && dirResult.data) {
+      const node = dirResult.data.node;
+      if (node.type === 'directory' && node.children) {
+        const targetFileSystem = node.children as FileSystem;
+        Object.keys(targetFileSystem).forEach(key => {
+          if (key.startsWith(partial)) {
+            completions.push(`${dirPath}/${key}`);
+          }
+        });
+      }
     }
   }
 

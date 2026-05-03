@@ -23,3 +23,16 @@ export interface CommandValidation {
   isValid: boolean;
   error?: string;
 }
+
+// Standardized result type for all file system operations
+export type CommandResult<T> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+};
+
+// Path representation as array (internal state)
+export type PathArray = string[];
+
+// Path string for display (e.g., "~/projects")
+export type PathString = string;

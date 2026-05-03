@@ -1,7 +1,7 @@
 import React from 'react';
 import { COMMANDS_DESC } from '../data/commands';
 import { getFirstContextualMatch, getContextualCompletions, parseCommandContext } from './autocompleteUtils';
-import type { FileSystem } from '../types';
+import type { FileSystem, PathArray } from '../types';
 
 // Get first matching command (same logic as ghost suggestion)
 export const getFirstMatch = (currentInput: string): string => {
@@ -16,11 +16,11 @@ export const getFirstMatch = (currentInput: string): string => {
 // Ghost suggestion logic with context awareness
 export const updateGhostSuggestion = (
   currentInput: string,
-  currentPath: string,
+  currentPathArray: PathArray,
   fileSystem: FileSystem,
   setGhostSuggestion: (value: string) => void
 ): void => {
-  const match = getFirstContextualMatch(currentInput, currentPath, fileSystem);
+  const match = getFirstContextualMatch(currentInput, currentPathArray, fileSystem);
   setGhostSuggestion(match);
 };
 
@@ -39,14 +39,14 @@ export const acceptGhostSuggestion = (
 // Tab completion logic with context awareness
 export const handleTabCompletion = (
   currentInput: string,
-  currentPath: string,
+  currentPathArray: PathArray,
   fileSystem: FileSystem,
   setCurrentInput: (value: string) => void,
   setSuggestions: (suggestions: string[]) => void,
   setGhostSuggestion: (value: string) => void
 ): void => {
   // First, try to accept ghost suggestion if it exists (same as Right Arrow)
-  const ghostMatch = getFirstContextualMatch(currentInput, currentPath, fileSystem);
+  const ghostMatch = getFirstContextualMatch(currentInput, currentPathArray, fileSystem);
   if (ghostMatch && ghostMatch !== currentInput) {
     setCurrentInput(ghostMatch);
     setGhostSuggestion('');
@@ -54,7 +54,7 @@ export const handleTabCompletion = (
   }
   
   // If no ghost suggestion, get all contextual completions
-  const completions = getContextualCompletions(currentInput, currentPath, fileSystem);
+  const completions = getContextualCompletions(currentInput, currentPathArray, fileSystem);
   
   // If only one match, complete immediately
   if (completions.length === 1) {
@@ -113,7 +113,7 @@ export const handleHistoryNavigation = (
 export const handleKeyDown = (
   e: React.KeyboardEvent<HTMLInputElement>,
   currentInput: string,
-  currentPath: string,
+  currentPathArray: PathArray,
   fileSystem: FileSystem,
   setCurrentInput: (value: string) => void,
   setSuggestions: (suggestions: string[]) => void,
@@ -129,7 +129,7 @@ export const handleKeyDown = (
     executeCommand(currentInput);
   } else if (e.key === 'Tab') {
     e.preventDefault();
-    handleTabCompletion(currentInput, currentPath, fileSystem, setCurrentInput, setSuggestions, setGhostSuggestion);
+    handleTabCompletion(currentInput, currentPathArray, fileSystem, setCurrentInput, setSuggestions, setGhostSuggestion);
   } else if (e.key === 'ArrowRight') {
     e.preventDefault();
     // Accept ghost suggestion with right arrow
@@ -146,12 +146,12 @@ export const handleKeyDown = (
 // Handle input change for ghost suggestion
 export const handleInputChange = (
   e: React.ChangeEvent<HTMLInputElement>,
-  currentPath: string,
+  currentPathArray: PathArray,
   fileSystem: FileSystem,
   setCurrentInput: (value: string) => void,
   setGhostSuggestion: (value: string) => void
 ): void => {
   const newValue = e.target.value;
   setCurrentInput(newValue);
-  updateGhostSuggestion(newValue, currentPath, fileSystem, setGhostSuggestion);
+  updateGhostSuggestion(newValue, currentPathArray, fileSystem, setGhostSuggestion);
 };

@@ -1,4 +1,4 @@
-import type { FileSystem, CommandValidation } from '../types';
+import type { FileSystem, CommandValidation, PathArray } from '../types';
 import { COMMAND_RESPONSES } from '../data/responses';
 import { validateArgs } from './validators';
 import { getFileContent, listDirectory, changeDirectory, getDirectoryContents, sortItems } from './fileSystemUtils';
@@ -26,29 +26,41 @@ export const handleSudoCommand = (args: string[]): string => {
   return COMMAND_RESPONSES.sudo.accessDenied(args.join(' '));
 };
 
-export const handleCatCommand = (args: string[], currentPath: string, fileSystem: FileSystem): string => {
+export const handleCatCommand = (args: string[], currentPathArray: PathArray, fileSystem: FileSystem): string => {
   const validation = validateArgs(args);
   if (!validation.isValid) {
     return 'cat: missing file operand\nTry \'cat --help\' for more information.';
   }
   
   const filename = args[0];
-  return getFileContent(filename, currentPath, fileSystem);
-};
-
-export const handleLsCommand = (currentPath: string, fileSystem: FileSystem): string => {
-  return listDirectory(currentPath, fileSystem);
-};
-
-export const handleCdCommand = (args: string[], setCurrentPath: React.Dispatch<React.SetStateAction<string>>, fileSystem: FileSystem): string => {
-  const target = args[0];
-  const result = changeDirectory(target, '', fileSystem);
+  const result = getFileContent(filename, currentPathArray, fileSystem);
   
-  if (result.error) {
-    return result.error;
+  if (!result.success) {
+    return result.error || 'cat: unknown error';
   }
   
-  setCurrentPath(result.path);
+  return result.data || '';
+};
+
+export const handleLsCommand = (currentPathArray: PathArray, fileSystem: FileSystem): string => {
+  const result = listDirectory('', currentPathArray, fileSystem);
+  
+  if (!result.success) {
+    return result.error || 'ls: unknown error';
+  }
+  
+  return result.data || 'Directory is empty.';
+};
+
+export const handleCdCommand = (args: string[], currentPathArray: PathArray, setCurrentPath: React.Dispatch<React.SetStateAction<PathArray>>, fileSystem: FileSystem): string => {
+  const target = args[0];
+  const result = changeDirectory(target, currentPathArray, fileSystem);
+  
+  if (!result.success) {
+    return result.error || 'cd: unknown error';
+  }
+  
+  setCurrentPath(result.data || []);
   return '';
 };
 
@@ -94,20 +106,25 @@ const generateTree = (
   return result;
 };
 
-export const handleTreeCommand = (currentPath: string, fileSystem: FileSystem): string => {
-  let targetPath = currentPath;
-  let targetFileSystem = fileSystem;
+export const handleTreeCommand = (currentPathArray: PathArray, fileSystem: FileSystem): string => {
+  let targetPathArray = currentPathArray;
+  let targetFileSystem: FileSystem = fileSystem;
   
-  // Resolve the target file system based on current path
-  if (currentPath === 'projects' && fileSystem['projects']?.children) {
-    targetFileSystem = fileSystem['projects'].children;
-    targetPath = 'projects';
-  } else if (currentPath === 'certs' && fileSystem['certs']?.children) {
-    targetFileSystem = fileSystem['certs'].children;
-    targetPath = 'certs';
-  } else {
-    targetFileSystem = fileSystem;
-    targetPath = '~';
+  // Resolve the target file system based on current path array
+  if (currentPathArray.length > 0) {
+    // Traverse to the current directory
+    let currentNode: FileSystem = fileSystem;
+    for (const segment of currentPathArray) {
+      if (currentNode[segment] && currentNode[segment].type === 'directory' && currentNode[segment].children) {
+        currentNode = currentNode[segment].children as FileSystem;
+      } else {
+        // Invalid path, fall back to root
+        currentNode = fileSystem;
+        targetPathArray = [];
+        break;
+      }
+    }
+    targetFileSystem = currentNode;
   }
   
   const items = Object.keys(targetFileSystem);
@@ -121,5 +138,8 @@ export const handleTreeCommand = (currentPath: string, fileSystem: FileSystem): 
   
   const tree = generateTree(sortedItems, targetFileSystem);
   
-  return `${targetPath}/\n${tree}`;
+  // Convert path array to display string
+  const displayPath = targetPathArray.length === 0 ? '~' : `~/${targetPathArray.join('/')}`;
+  
+  return `${displayPath}/\n${tree}`;
 };

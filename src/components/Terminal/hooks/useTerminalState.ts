@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useCommandHistory } from './useCommandHistory';
-import type { TerminalLine } from '../types';
+import type { TerminalLine, PathArray } from '../types';
 
 export const useTerminalState = () => {
   // Command history
@@ -11,7 +11,7 @@ export const useTerminalState = () => {
   const [currentInput, setCurrentInput] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [ghostSuggestion, setGhostSuggestion] = useState('');
-  const [currentPath, setCurrentPath] = useState('~');
+  const [currentPath, setCurrentPath] = useState<PathArray>([]);
   const [isMobile, setIsMobile] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [showBanner, setShowBanner] = useState(true);

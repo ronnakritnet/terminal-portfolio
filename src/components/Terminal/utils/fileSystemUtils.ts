@@ -1,5 +1,14 @@
-import type { FileSystem, CommandResult, PathArray } from '../types';
+import type { FileSystem, CommandResult, PathArray, FileSystemNode } from '../types';
 import { resolveRelativePath } from './pathUtils';
+
+/**
+ * Type guard to validate if a value is a FileSystemNode
+ * @param node - Unknown value to validate
+ * @returns True if the value is a valid FileSystemNode
+ */
+export const isFileSystemNode = (node: unknown): node is FileSystemNode => {
+  return typeof node === 'object' && node !== null && 'type' in node;
+};
 
 /**
  * Standardized sorting utility for file system items
@@ -10,8 +19,8 @@ import { resolveRelativePath } from './pathUtils';
  */
 export const sortItems = (items: string[], fileSystem: FileSystem): string[] => {
   return items.sort((a, b) => {
-    const aIsDir = fileSystem[a].type === 'directory';
-    const bIsDir = fileSystem[b].type === 'directory';
+    const aIsDir = fileSystem[a]?.type === 'directory';
+    const bIsDir = fileSystem[b]?.type === 'directory';
     
     // Directories first, then files
     if (aIsDir && !bIsDir) return -1;
@@ -33,7 +42,7 @@ export const resolvePath = (
   pathString: string,
   currentPathArray: PathArray,
   fileSystem: FileSystem
-): CommandResult<{ node: any; remainingPath: PathArray }> => {
+): CommandResult<{ node: FileSystemNode; remainingPath: PathArray }> => {
   
   // 1. Prepare working path array
   let workingPathArray: PathArray;
@@ -59,7 +68,7 @@ export const resolvePath = (
   }
 
   // 3. Start traversal from a Virtual Root to maintain consistent node structure
-  let currentNode: any = { type: 'directory', children: fileSystem };
+  let currentNode: FileSystemNode = { type: 'directory', children: fileSystem };
 
   for (const segment of workingPathArray) {
     // Ensure current node is a directory before moving deeper
@@ -67,10 +76,16 @@ export const resolvePath = (
        return { success: false, error: `-bash: ${pathString}: Not a directory` };
     }
 
-    const nextNode = currentNode.children[segment];
+    const nextNode = currentNode.children?.[segment];
     if (!nextNode) {
       return { success: false, error: `-bash: ${pathString}: No such file or directory` };
     }
+    
+    // Validate next node type before assignment
+    if (!isFileSystemNode(nextNode)) {
+      return { success: false, error: `-bash: ${pathString}: Invalid file system node` };
+    }
+    
     currentNode = nextNode;
   }
 
@@ -111,6 +126,14 @@ export const getFileContent = (
 
   const node = result.data.node;
   
+  // Validate node type before proceeding
+  if (!isFileSystemNode(node)) {
+    return {
+      success: false,
+      error: `-bash: cat: ${inputPath}: Invalid file system node`
+    };
+  }
+  
   // Check if node is a file
   if (node.type !== 'file') {
     return {
@@ -121,7 +144,7 @@ export const getFileContent = (
 
   return {
     success: true,
-    data: (node.content as string) || ''
+    data: node.content || ''
   };
 };
 
@@ -148,15 +171,23 @@ export const listDirectory = (
 
   const node = result.data.node;
   
+  // Validate node type before proceeding
+  if (!isFileSystemNode(node)) {
+    return {
+      success: false,
+      error: `-bash: ${pathString}: Invalid file system node`
+    };
+  }
+  
   // Check if node is a directory
   if (node.type !== 'directory' || !node.children) {
     return {
       success: false,
-      error: `-bash: ls: ${pathString}: Not a directory`
+      error: `-bash: ${pathString}: Not a directory`
     };
   }
 
-  const targetFileSystem = node.children as FileSystem;
+  const targetFileSystem = node.children;
   const items = Object.keys(targetFileSystem);
   
   // Sort items using standardized sorting
@@ -203,6 +234,14 @@ export const changeDirectory = (
   }
 
   const node = result.data.node;
+  
+  // Validate node type before proceeding
+  if (!isFileSystemNode(node)) {
+    return {
+      success: false,
+      error: `-bash: cd: ${target}: Invalid file system node`
+    };
+  }
   
   // Check if node is a directory
   if (node.type !== 'directory') {
@@ -355,8 +394,8 @@ export const resolvePathCompletions = (
     const result = resolvePath('', currentPathArray, fileSystem);
     if (result.success && result.data) {
       const node = result.data.node;
-      if (node.type === 'directory' && node.children) {
-        const targetFileSystem = node.children as FileSystem;
+      if (isFileSystemNode(node) && node.type === 'directory' && node.children) {
+        const targetFileSystem = node.children;
         Object.keys(targetFileSystem).forEach(key => {
           if (key.startsWith(inputPath)) {
             completions.push(key);
@@ -370,12 +409,12 @@ export const resolvePathCompletions = (
     const dirPath = parts[0];
     const partial = parts.slice(1).join('/');
 
-    // Resolve the directory part
+    // Resolve directory part
     const dirResult = resolvePath(dirPath, currentPathArray, fileSystem);
     if (dirResult.success && dirResult.data) {
       const node = dirResult.data.node;
-      if (node.type === 'directory' && node.children) {
-        const targetFileSystem = node.children as FileSystem;
+      if (isFileSystemNode(node) && node.type === 'directory' && node.children) {
+        const targetFileSystem = node.children;
         Object.keys(targetFileSystem).forEach(key => {
           if (key.startsWith(partial)) {
             completions.push(`${dirPath}/${key}`);

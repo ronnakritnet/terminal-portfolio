@@ -7,12 +7,15 @@ export interface TerminalLine {
   path?: string; // Store path at time of execution
 }
 
+// Strict file system node interface for type safety
+export interface FileSystemNode {
+  type: 'file' | 'directory';
+  content?: string;
+  children?: Record<string, FileSystemNode>;
+}
+
 export interface FileSystem {
-  [key: string]: {
-    type: 'file' | 'directory';
-    content?: string;
-    children?: FileSystem;
-  };
+  [key: string]: FileSystemNode;
 }
 
 export interface TerminalProps {

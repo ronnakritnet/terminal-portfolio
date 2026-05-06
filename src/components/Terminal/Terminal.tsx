@@ -18,7 +18,7 @@ import ASCIIBanner from './ASCIIBanner';
 
 // ASCII art (moved to constants/ascii.ts)
 // Terminal component
-const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
+const Terminal: React.FC<TerminalProps> = ({ externalCommand, currentPath, setCurrentPath }) => {
   const {
     lines,
     setLines,
@@ -28,8 +28,8 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     setSuggestions,
     ghostSuggestion,
     setGhostSuggestion,
-    currentPath,
-    setCurrentPath,
+    currentPath: path,
+    setCurrentPath: setPath,
     isMobile,
     setIsMobile,
     toast,
@@ -45,7 +45,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     setShowBanner,
     isInitialLoad,
     setIsInitialLoad
-  } = useTerminalState();
+  } = useTerminalState(currentPath, setCurrentPath);
   
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -72,7 +72,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     setGhostSuggestion('');
 
     // Capture current path for this execution
-    const executionPath = pathArrayToString(currentPath);
+    const executionPath = pathArrayToString(path || []);
 
     const newLine: TerminalLine = {
       id: Date.now().toString(),
@@ -125,19 +125,19 @@ Use 'cat [filename]' to explore certification details.`;
         break;
 
       case 'ls':
-        output = handleLsCommand(currentPath, fileSystem);
+        output = handleLsCommand(path || [], fileSystem);
         break;
 
       case 'cd':
-        output = handleCdCommand(args, currentPath, setCurrentPath, fileSystem);
+        output = handleCdCommand(args, path || [], setPath, fileSystem);
         break;
 
       case 'cat':
-        output = handleCatCommand(args, currentPath, fileSystem);
+        output = handleCatCommand(args, path || [], fileSystem);
         break;
 
       case 'tree':
-        output = handleTreeCommand(currentPath, fileSystem);
+        output = handleTreeCommand(path || [], fileSystem);
         break;
 
       case 'whois':
@@ -265,7 +265,7 @@ Use 'cat [filename]' to explore certification details.`;
     handleKeyDown(
       e,
       currentInput,
-      currentPath,
+      path || [],
       fileSystem,
       setCurrentInput,
       setSuggestions,
@@ -279,11 +279,11 @@ Use 'cat [filename]' to explore certification details.`;
   };
 
   const handleInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleInputChange(e, currentPath, fileSystem, setCurrentInput, setGhostSuggestion);
+    handleInputChange(e, path || [], fileSystem, setCurrentInput, setGhostSuggestion);
   };
 
   return (
-    <div className="flex-1 bg-black text-green-400 font-mono flex flex-col border-t border-gray-800">
+    <div className="flex-1 bg-black text-green-400 font-mono flex flex-col h-full overflow-hidden">
       {/* Executing Toast Notification */}
       {toast && (
         <div 
@@ -298,15 +298,15 @@ Use 'cat [filename]' to explore certification details.`;
         </div>
       )}
 
-      {/* Terminal Container */}
-      <div className="flex-1 flex px-4 py-6 pt-20 overflow-y-auto">
-        <div className="w-full max-w-5xl mx-auto">
-          {/* Terminal Content */}
-          <div 
-            ref={terminalRef}
-            className="px-6 py-4 mb-12 md:mb-0"
-            style={{ backgroundColor: 'var(--terminal-bg)' }}
-          >
+      {/* Terminal Container - Full Right Pane with Independent Scrolling */}
+      <div 
+        ref={terminalRef}
+        className="flex-1 px-8 py-8 pt-24 overflow-y-auto scroll-smooth overscroll-contain"
+        style={{ 
+          backgroundColor: '#000000',
+          WebkitOverflowScrolling: 'touch'
+        }}
+      >
             {/* ASCII Banner - First element in terminal */}
             {showBanner && <ASCIIBanner isMobile={isMobile} />}
             
@@ -354,7 +354,7 @@ Use 'cat [filename]' to explore certification details.`;
               </span>
               <span className="mx-1 text-white">:</span>
               <span style={{ color: 'var(--terminal-blue)' }}>
-                {pathArrayToString(currentPath)}
+                {pathArrayToString(path || [])}
               </span>
               <span className="mx-1 text-white">$</span>
               <div className="flex-1 relative ml-2 min-w-0">
@@ -383,8 +383,6 @@ Use 'cat [filename]' to explore certification details.`;
                 )}
               </div>
             </div>
-          </div>
-        </div>
       </div>
     </div>
   );

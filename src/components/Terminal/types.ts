@@ -20,6 +20,8 @@ export interface FileSystem {
 
 export interface TerminalProps {
   externalCommand?: string;
+  currentPath?: PathArray;
+  setCurrentPath?: React.Dispatch<React.SetStateAction<PathArray>>;
 }
 
 export interface CommandValidation {

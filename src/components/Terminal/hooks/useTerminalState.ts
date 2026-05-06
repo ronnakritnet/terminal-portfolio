@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useCommandHistory } from './useCommandHistory';
 import type { TerminalLine, PathArray } from '../types';
 
-export const useTerminalState = () => {
+export const useTerminalState = (currentPath?: PathArray, setCurrentPath?: React.Dispatch<React.SetStateAction<PathArray>>) => {
   // Command history
   const history = useCommandHistory();
   
@@ -11,11 +11,15 @@ export const useTerminalState = () => {
   const [currentInput, setCurrentInput] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [ghostSuggestion, setGhostSuggestion] = useState('');
-  const [currentPath, setCurrentPath] = useState<PathArray>([]);
+  const [internalCurrentPath, setInternalCurrentPath] = useState<PathArray>([]);
   const [isMobile, setIsMobile] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [showBanner, setShowBanner] = useState(true);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  // Use external path state if provided, otherwise use internal state
+  const path = currentPath || internalCurrentPath;
+  const setPath = setCurrentPath || setInternalCurrentPath;
 
   // Toast notification handler
   const showToast = useCallback((message: string) => {
@@ -39,8 +43,8 @@ export const useTerminalState = () => {
     setSuggestions,
     ghostSuggestion,
     setGhostSuggestion,
-    currentPath,
-    setCurrentPath,
+    currentPath: path,
+    setCurrentPath: setPath,
     isMobile,
     setIsMobile,
     toast,

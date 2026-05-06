@@ -1,0 +1,137 @@
+.tree-view {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-y: auto;
+  height: 100%;
+  background-color: rgb(31 41 55); /* gray-800 */
+  color: rgb(156 163 175); /* gray-400 */
+}
+
+.tree-view-header {
+  position: sticky;
+  top: 0;
+  background-color: rgb(31 41 55); /* gray-800 */
+  z-index: 10;
+  border-bottom: 1px solid rgb(55 65 81); /* gray-700 */
+}
+
+.tree-view-content {
+  padding: 4px 0;
+}
+
+.tree-node-container {
+  user-select: none;
+}
+
+.tree-node {
+  display: flex;
+  align-items: center;
+  padding: 4px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 150ms ease-in-out;
+  min-height: 28px;
+  gap: 6px;
+}
+
+.tree-node:hover {
+  background-color: rgb(55 65 81); /* gray-700 */
+}
+
+.tree-node.selected {
+  background-color: rgba(255, 255, 255, 0.05); /* white/5 */
+  color: white;
+}
+
+.tree-node-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  transition: transform 150ms ease-in-out;
+}
+
+.tree-node-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.tree-node-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tree-node-suffix {
+  color: rgb(156 163 175); /* gray-400 */
+  font-size: 12px;
+  margin-left: 2px;
+}
+
+.tree-node-children {
+  position: relative;
+}
+
+.tree-node-children::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: rgb(55 65 81); /* gray-700 */
+}
+
+/* Focus styles for accessibility */
+.tree-node:focus {
+  outline: 2px solid rgb(34 197 94); /* green-500 */
+  outline-offset: 1px;
+}
+
+/* Smooth scrolling */
+.tree-view {
+  scroll-behavior: smooth;
+}
+
+/* Minimalist scrollbar - hidden until hover */
+.tree-view::-webkit-scrollbar {
+  width: 6px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.tree-view:hover::-webkit-scrollbar {
+  opacity: 1;
+}
+
+.tree-view::-webkit-scrollbar-track {
+  background-color: rgb(31 41 55); /* gray-800 */
+  border-radius: 3px;
+}
+
+.tree-view::-webkit-scrollbar-thumb {
+  background-color: rgb(75 85 99); /* gray-600 */
+  border-radius: 3px;
+  border: 1px solid rgb(31 41 55); /* gray-800 */
+}
+
+.tree-view::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(107 114 128); /* gray-500 */
+}
+
+/* Firefox scrollbar styling */
+.tree-view {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(75 85 99) rgb(31 41 55);
+}
+
+.tree-view:hover {
+  scrollbar-color: rgb(107 114 128) rgb(31 41 55);
+}

@@ -95,20 +95,24 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
         output = fileSystem['about.md'].content || 'About information not found.';
         break;
 
-      case 'projects':
-        output = `PROJECTS:
+      case 'projects':  
+        output = `PROJECTS DIRECTORY:
   📄 ronnakrit-net.md               - Interactive Portfolio & Terminal Interface
   📄 schedule-management-system.md  - Academic Triple-view Schedule Manager
 
-Use 'cat [filename]' to explore project details.`;
+[Usage Tips]
+- From root folder : cat projects/[filename]
+- Inside directory : cd projects && cat [filename]`;
         break;
 
       case 'certs':
-        output = `CERTIFICATIONS:
+        output = `CERTIFICATIONS DIRECTORY:
   📄 google_it_support.md          - Google IT Support Professional Certificate
   📄 google_cybersecurity.md       - Google Cybersecurity Professional Certificate
 
-Use 'cat [filename]' to explore certification details.`;
+[Usage Tips]
+- From root folder : cat certs/[filename]
+- Inside directory : cd certs && cat [filename]`;
         break;
 
       case 'skills':

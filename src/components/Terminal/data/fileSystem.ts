@@ -10,21 +10,20 @@ export const fileSystem: FileSystem = {
         content: `
 PROJECT: RONNAKRIT.NET
 
-An interactive personal portfolio featuring a functional 
-terminal interface, designed for network engineering 
-and automation enthusiasts.
+An interactive personal portfolio featuring a functional terminal 
+interface, tailored for a Network Automation & Engineering persona.
 
 FEATURES:
 - Interactive Command Line Experience
-- Custom File System Simulation
-- Optimized for Linux & Network Engineer Persona
-- Deployed via GitHub Pages & Cloudflare
+- Basic File System Navigation (Beta / Under Development)
+- High-Performance Optimization (100% PageSpeed Insights Score)
+- Production Deployment via GitHub Pages & Cloudflare
 
 TECHNOLOGIES:
-- Framework : Astro, React
-- Language  : TypeScript
-- Styling   : Tailwind CSS
-- Tooling   : Windsurf AI, Git
+- Framework       : Astro, React
+- Language        : TypeScript
+- Styling         : Tailwind CSS
+- Tooling & Infr  : Cloudflare, Git, Windsurf AI
 `
       },
       'schedule-management-system.md': {
@@ -32,21 +31,20 @@ TECHNOLOGIES:
         content: `
 PROJECT: ACADEMIC SCHEDULE MANAGER
 
-A web-based system designed to manage and visualize 
-academic schedules across three different dimensions: 
-Students, Teachers, and Classrooms.
+A web-based system designed to manage and visualize academic schedules 
+across three different dimensions: Students, Teachers, and Classrooms.
 
 FEATURES:
-- Triple-view Schedule: Student, Teacher, and Room
-- Conflict-free Management: Add/Move/Edit sessions
-- Real-time Data Visualization for classroom usage
-- Built with AI-assisted development workflow
+- Triple-View Scheduling Interface (Student, Teacher, Room)
+- Conflict-Free Session Management (Automated Schedule Collision Check)
+- Real-Time Dynamic Visualization for Classroom Usage
+- Developed with AI-Assisted Engineering Workflow
 
 TECHNOLOGIES:
-- Backend   : PHP
-- Database  : MySQL (phpMyAdmin)
-- Server    : XAMPP Stack
-- AI Tool   : Claude
+- Backend       : PHP
+- Database      : MySQL (phpMyAdmin)
+- Environment   : XAMPP Localhost Stack (Academic Sandbox)
+- Tooling       : Claude AI, Git
 `
       }
     }
@@ -56,15 +54,15 @@ TECHNOLOGIES:
     content: `
 PROFILE: RONNAKRIT WANANUKAN
 
-I am a 3rd-year Computer Engineering student focusing on modern 
-infrastructure and network systems. My journey started with an 
-IT Vocational Diploma, and now I'm bridging the gap between hardware 
-and software through automation.
+I am a 3rd-year Computer Engineering student at Rajamangala University 
+of Technology Phra Nakhon. My journey started with a High Vocational 
+Diploma in Information Technology, and now I'm bridging the gap 
+between systems infrastructure and software through network automation.
 
 CORE FOCUS:
-- Network Engineering (CCNA in progress)
-- Network Automation (Python, Netmiko)
-- Linux System Administration
+- Network Engineering (Preparing for CCNA)
+- Network Automation (Python, Netmiko, Ansible)
+- Linux Systems (Currently Learning)
 - Web Development (React, Astro)
 
 PHILOSOPHY:
@@ -77,20 +75,23 @@ PHILOSOPHY:
 TECHNICAL SKILLS
 
 NETWORK & INFRASTRUCTURE:
-- Cisco (CCNA Study Group / Preparing for exam)
-- Network Automation (Python-based scripting)
-- OSI Model & Network Fundamentals
-- Lab Tools: Cisco Packet Tracer, GNS3
+- OSI Model, TCP/IP & Network Fundamentals
+- Network Simulation: Cisco Packet Tracer
+- Web Infrastructure: DNS Management (Cloudflare), Email Routing
 
 PROGRAMMING & WEB:
-- Python (Focus: Network Scripting & Automation)
-- JavaScript/TypeScript (React, Astro Framework)
-- Shell Scripting (Bash for Linux automation)
+- JavaScript / TypeScript (React, Astro Framework)
+- HTML5 / CSS3 (Responsive Web Design)
+- Version Control: Git & GitHub (Branching, Code Management)
 
 SYSTEMS & HARDWARE:
-- Linux: Ubuntu (Primary OS / Daily Driver)
-- Network OS: Cisco IOS (Basic Configuration)
-- Hardware: Lenovo ThinkPad Specialist
+- Computer Hardware (PC Assembly, Troubleshooting & Maintenance)
+- Operating Systems (Windows & Linux Environments / Currently Learning)
+
+AI & DEVELOPMENT TOOLS:
+- AI-Assisted Development (Windsurf, ChatGPT, Claude)
+- Prompt Engineering for Code Analysis & Troubleshooting
+- Productivity Tools for Modern Engineering Workflows
 `
   },
   'contact.md': {
@@ -112,19 +113,23 @@ STATUS: Looking for Internship (2026-2027)
     content: `
 ROADMAP 2026-2027
 
-PHASE 1: FOUNDATION (CURRENT - 2026)
-  [X] Vocational Certificate to University Transfer
-  [/] CCNA Certification Prep (Target: Q3/Q4)
-  [/] Network Automation Portfolio (ronnakrit.net)
-  [ ] Improve Technical Typing (Target: 80 WPM)
+STATUS KEYS: [✔] Completed | [>] In Progress | [ ] To Do
+---------------------------------------------------------
 
-PHASE 2: PROFESSIONAL (2027)
-  [ ] Seek Network Engineering Internship
-  [ ] Master Network Automation (Python, Ansible)
-  [ ] Launch Network Wiki & YouTube
-  [ ] Graduate in Computer Engineering
+PHASE 1: FOUNDATION & PREPARATION (CURRENT - 2026)
+  [✔] Vocational IT Diploma to University Transfer
+  [>] Network Fundamentals & CCNA Preparation
+  [>] Linux Systems & Ubuntu Environment Basics
+  [>] Preparing Python Basics for Network Automation
+  [>] Maintaining Portfolio Site & Web Infrastructure
+  [ ] Improve Technical Typing Speed (Target: 80 WPM)
 
-PROGRESS (PHASE 1): [██████████░░░░░░░░░░] 50%
+PHASE 2: FINAL YEAR & PROFESSIONAL (2027)
+  [ ] Secure a Network Engineering Internship
+  [ ] Develop Computer Engineering Final Project (Network Automation)
+  [ ] Master Network Automation Libraries (Netmiko, Paramiko, Ansible)
+  [ ] Launch Tech YouTube Channel (Documenting My Engineering Journey)
+  [ ] Graduate in Computer Engineering (RMUTP)
 `
   },
   'certs': {
@@ -133,33 +138,37 @@ PROGRESS (PHASE 1): [██████████░░░░░░░░░�
       'google_it_support.md': {
         type: 'file',
         content: `
-CERTIFICATION: GOOGLE IT SUPPORT PROFESSIONAL CERTIFICATE
+CERTIFICATION: GOOGLE IT SUPPORT PROFESSIONAL
 
-Provider: Coursera
-Status: Completed
+Issuer       : Google (via Coursera)
+Status       : Completed & Verified
+Credential   : https://coursera.org/share/6ee83fcc650e37c3d8cd35c73961b3e3
+Core Focus   : IT Foundations & Infrastructure Support
 
-SKILLS LEARNED:
-- Troubleshooting
-- Operating Systems
-- System Administration
-- Network Protocols
-- Security
+KEY KNOWLEDGE AREAS (Based on 5 Completed Courses):
+- Computer Networking (The Bits and Bytes of Network Protocols)
+- Operating Systems (Becoming a Windows & Linux Power User)
+- System Administration & IT Infrastructure Services
+- IT Security (Defense Against the Digital Dark Arts)
+- Technical Support Fundamentals & Infrastructure Troubleshooting
 `
       },
       'google_cybersecurity.md': {
         type: 'file',
         content: `
-CERTIFICATION: GOOGLE CYBERSECURITY PROFESSIONAL CERTIFICATE
+CERTIFICATION: GOOGLE CYBERSECURITY PROFESSIONAL
 
-Provider: Coursera
-Status: Completed
+Issuer       : Google (via Coursera)
+Status       : Completed & Verified
+Credential   : https://coursera.org/share/707bec8c1e18e2be9c0a735b262b32d3
+Core Focus   : Security Operations & Infrastructure Defense
 
-SKILLS LEARNED:
-- Threat Analysis
-- Python
-- SQL
-- SIEM Tools
-- Incident Response
+KEY KNOWLEDGE AREAS (Based on 9 Completed Courses):
+- Networks and Network Security (Connect & Protect Frameworks)
+- Tools of the Trade (Linux CLI & SQL Data Querying)
+- Automate Cybersecurity Tasks (Python Scripting Fundamentals)
+- Threat & Vulnerability Management (Assets & Risk Mitigation)
+- Detection and Response (Sound the Alarm / Incident Mitigation)
 `
       }
     }

@@ -8,7 +8,7 @@ export const asciiArt = `
 ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝   ╚═╝   
 
 Welcome to Ronnakrit's Terminal [Version 1.0.1]
-Authorized access only.
+Authorized session.
 
 USER_PROFILE:
   - Role     : Computer Engineering Student
@@ -29,7 +29,7 @@ export const asciiArtMobile = `
 ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
 
 Welcome to Ronnakrit's Terminal [Version 1.0.1]
-Authorized access only.
+Authorized session.
 
 USER_PROFILE:
   - Role     : Computer Engineering Student

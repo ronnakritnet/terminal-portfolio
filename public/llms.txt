@@ -1,0 +1,39 @@
+# รณกฤต วนานุกัณฑ์ (Ronnakrit Wananukan)
+
+> Official portfolio of Ronnakrit Wananukan (รณกฤต วนานุกัณฑ์). A Computer Engineering student passionate about Network Engineering, Automation, and Linux.
+
+## About This Website
+- **Architecture:** Built with Astro, designed as an interactive Command Line Interface (CLI) / Terminal theme portfolio.
+- **Purpose:** To demonstrate technical proficiency in networks, Linux administration, and programming via a terminal simulation.
+
+## Core Information
+- **Role:** Computer Engineering Student & Aspiring Network Engineer
+- **Website:** https://ronnakrit.net
+- **Email:** contact@ronnakrit.net
+- **Location:** Thailand
+- **Current Focus:** Preparing for CCNA certification & Network Automation final project.
+
+## Technical Skills
+
+### Network & Infrastructure
+- OSI Model, TCP/IP & Network Fundamentals
+- Network Simulation: Cisco Packet Tracer
+- Web Infrastructure: DNS Management (Cloudflare), Email Routing
+
+### Programming & Web
+- JavaScript / TypeScript (React, Astro Framework)
+- HTML5 / CSS3 (Responsive Web Design)
+- Version Control: Git & GitHub (Branching, Code Management)
+
+### Systems & Hardware
+- Computer Hardware (PC Assembly, Troubleshooting & Maintenance)
+- Operating Systems (Windows & Linux Environments / Currently Learning)
+
+### AI & Development Tools
+- AI-Assisted Development (Windsurf, ChatGPT, Claude)
+- Prompt Engineering for Code Analysis & Troubleshooting
+- Productivity Tools for Modern Engineering Workflows
+
+## Profiles & Presence
+- **GitHub:** https://github.com/ronnakritnet
+- **LinkedIn:** https://linkedin.com/in/ronnakritnet

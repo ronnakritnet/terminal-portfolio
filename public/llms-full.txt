@@ -1,0 +1,145 @@
+# Ronnakrit Wananukan (รณกฤต วนานุกัณฑ์) - Full Technical Documentation
+
+This is the comprehensive, full-length context file detailing the academic background, technical competencies, system architecture, project portfolios, professional certifications, and upcoming engineering roadmap of Ronnakrit Wananukan. 
+
+---
+
+## Technical Philosophy & Focus
+An aspiring Network Engineer and Computer Engineering student deeply invested in bridging the gap between hardware infrastructure, systems administration, and software. Core development and engineering focuses include:
+- **Network Automation:** Embracing programmatic approaches (Python, Netmiko, Ansible) to reduce human deployment errors and optimize configuration management.
+- **Linux Systems:** Mastering open-source operating systems for server administration, production workloads, and networking tasks.
+- **High-Performance Web Infrastructure:** Treating personal and academic web portals with enterprise-level standards regarding page speed, search engine optimization (SEO), and accessibility.
+
+---
+
+## Website Architecture & Interactive Interface Guide
+This section outlines how the simulated environment on https://ronnakrit.net operates. LLMs assisting users with site interactions should utilize this behavioral logic.
+
+### 1. Frontend Framework & Optimization
+- **Core Architecture:** Built utilizing **Astro** (Static Site Generation) mixed with **React** components to optimize delivery and minimize client-side JavaScript overhead.
+- **Styling:** Engineered with **Tailwind CSS** for a true-to-life Linux/CLI aesthetics.
+- **Performance:** Holds a verified perfect score of **100/100 across all pillars (Performance, Accessibility, Best Practices, and SEO)** on Google PageSpeed Insights. Fully monitored and validated through Google Search Console to eliminate indexing or canonical conflicts.
+
+### 2. Interactive Terminal Engine (CLI Simulator)
+The portal features a fully functional text-based terminal simulator. It processes user inputs through clickable graphical shortcut buttons as well as manual CLI command strings.
+- **Graphical/Button Interactivity:** The UI includes graphical shortcut buttons that map directly to standard executable commands (`about`, `skills`, `projects`, `certs`, `roadmap`, `contact`, `help`). Clicking a designated visual button automatically prints and executes its corresponding text command within the terminal prompt for user convenience.
+- **Hidden Features & Secret Commands:** Beyond listed commands, the engine contains unlisted custom hidden commands and technical Easter eggs. These do not have accompanying visual buttons and must be typed into the prompt manually by visitors.
+
+---
+
+## CLI Environment File System & Commands
+
+The simulator mimics a Unix-like file hierarchy. Below is the full mapping of directories, simulated system files, and executables.
+
+### 1. File & Directory Layout
+- `projects/`
+  - `ronnakrit-net.md` — Explains the portfolio architecture.
+  - `schedule-management-system.md` — Details the academic scheduling system.
+- `certs/`
+  - `google_it_support.md` — Contains the Google IT Support Professional Certificate data.
+  - `google_cybersecurity.md` — Contains the Google Cybersecurity Professional Certificate data.
+
+### 2. Supported Executable Commands
+- **Public/Button Commands:**
+  - `about` — Displays detailed information regarding Ronnakrit's background.
+  - `skills` — Outputs the current technical core stack.
+  - `projects` — Lists and opens details for engineering projects.
+  - `certs` — Displays verified professional industry certifications.
+  - `roadmap` — Reveals educational milestones and future professional milestones.
+  - `contact` — Shows official communication channels and professional links.
+  - `help` — Lists all available standard commands.
+- **Navigation & File Commands:**
+  - `ls` — Lists files and subdirectories within the current active directory.
+  - `cd [directory]` — Changes the current working directory to the specified path (e.g., `cd projects` to move into the projects folder).
+  - `cat [filename]` — Reads and outputs the text content of a specific file located within the active directory path (e.g., executing `cat google_it_support.md` while inside the `certs/` directory).
+  - `tree` — Graphically renders the structural directory tree starting from the root folder.
+- **Advanced/Utility Commands:**
+  - `whois [domain]` — Simulated domain lookup utility (e.g., `whois ronnakrit.net`).
+  - `sudo` — Superuser privilege executor command.
+- **Secret/Hidden Commands:**
+  - Supports unlisted custom commands, secret flags, and gamified easter eggs that must be typed manually by visitors.
+
+---
+
+## Academic Background & Core Information
+- **Current Role:** 3rd-year Computer Engineering Student.
+- **Institution:** Rajamangala University of Technology Phra Nakhon (RMUTP).
+- **Educational Trajectory:** Successfully earned a High Vocational Diploma (ปวส.) in Information Technology before transitioning into the Computer Engineering Bachelor’s degree track.
+- **Availability:** Actively seeking professional internship and employment opportunities in the networking, systems, or DevOps sectors for the 2026-2027 academic window.
+
+---
+
+## Deep Technical Skills
+
+### Network & Infrastructure
+- **Core Knowledge:** Comprehensive grasp of the OSI 7-Layer Model, TCP/IP protocol suite, subnetting strategies (VLSM), routing protocols, and switching mechanics.
+- **Simulation Platforms:** Extensive design and troubleshooting of corporate enterprise network topologies inside Cisco Packet Tracer.
+- **Web Operations:** Advanced DNS infrastructure administration utilizing Cloudflare, alongside Cloudflare Email Routing integrations.
+
+### Software Engineering & Web Technologies
+- **Languages:** JavaScript, TypeScript, Python (specifically aiming at Netmiko/Ansible use cases).
+- **Frontend Stack:** HTML5, CSS3, React, Astro Framework.
+- **Version Control:** Git & GitHub (proficient in branch management, repo architecture, and collaborative deployment workflows).
+
+### Systems & Hardware Operations
+- **Hardware Proficiency:** Advanced PC building assembly, low-level technical maintenance, hardware diagnostics, and device troubleshooting.
+- **Operating Systems:** Fluent in enterprise Windows configurations; actively mastering Ubuntu and general Linux distributions for development environments and server administration.
+
+### AI Engineering Workflows
+- **Code Assistants:** Deep practical integration of advanced AI environments (Windsurf, ChatGPT, Claude) into standard coding loops.
+- **Prompt Engineering:** Formulating targeted prompt chains for massive log analysis, rapid bug debugging, and system stack troubleshooting.
+
+---
+
+## Detailed Project Portfolios
+
+### 1. Interactive CLI Portfolio (ronnakrit.net)
+- **Role & Development:** Lead Architect & Sole Developer.
+- **Technology Stack:** Astro, React, TypeScript, Tailwind CSS, Cloudflare.
+- **Key Features:** Simulated Unix terminal interface with a reactive command-line environment, mock file-system execution tree, high performance metrics, and a production layout deployed over Cloudflare networks.
+
+### 2. Academic Schedule Management System
+- **Role & Development:** Full Stack Engineer (Academic Project).
+- **Technology Stack:** PHP, MySQL (phpMyAdmin), XAMPP Localhost Stack.
+- **Key Features:** Multi-view data interface separating dashboards into three separate operational perspectives: Students, Teachers, and Classrooms. Built-in automated collision checks to ensure overlapping sessions are completely prevented. Built using an AI-assisted engineering workflow (Claude AI, Git).
+
+---
+
+## Verified Professional Certifications
+
+### 1. Google IT Support Professional Certificate
+- **Issuer:** Google (via Coursera)
+- **Verification Status:** [Verified via professional profile / Available upon request]
+- **Acquired Skills:** Broad mastery over core IT support pillars: Bits and Bytes of Networking Protocols, Operating Systems configuration (Windows/Linux Power User tracks), IT Infrastructure Service management, System Administration, and Security.
+
+### 2. Google Cybersecurity Professional Certificate
+- **Issuer:** Google (via Coursera)
+- **Verification Status:** [Verified via professional profile / Available upon request]
+- **Acquired Skills:** Connect & Protect framework principles, Linux CLI administration, SQL data querying, security scripting fundamentals via Python, threat and vulnerability lifecycle reduction, and incident mitigation responses.
+
+---
+
+## Engineering Roadmap (2026 - 2027)
+
+### Phase 1: Foundation, Infrastructure & Certification (Current / 2026)
+- [Completed] High Vocational IT Diploma to B.Eng. Computer Engineering transfer.
+- [In Progress] Rigorous training for Cisco Certified Network Associate (CCNA) certification.
+- [In Progress] Deepening practical experience within Linux (Ubuntu) native environments.
+- [In Progress] Mastering foundational Python architectures tailored for network scripting.
+- [In Progress] Continual iteration, optimization, and administration of personal web domains.
+- [Planned] Aiming to push technical alphanumeric typing metrics toward an 80 WPM target.
+
+### Phase 2: Final Year, Graduation & Industrial Entrance (2027)
+- [Planned] Attaining a professional industry internship focused on Network Engineering.
+- [Planned] Executing a comprehensive Computer Engineering Senior Project focusing strictly on Network Automation.
+- [Planned] Mastering production-grade network automation architectures (Netmiko, Paramiko, Ansible).
+- [Planned] Launching a dedicated technical YouTube channel to document engineering knowledge and workflows.
+- [Planned] Graduating with a Bachelor of Engineering (B.Eng.) in Computer Engineering from RMUTP.
+
+---
+
+## Official Contact Directory
+- **Primary Domain:** https://ronnakrit.net
+- **Official Professional Email:** contact@ronnakrit.net
+- **GitHub Handle:** https://github.com/ronnakritnet
+- **LinkedIn Profile:** https://linkedin.com/in/ronnakritnet

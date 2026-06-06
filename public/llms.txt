@@ -1,24 +1,36 @@
 # รณกฤต วนานุกัณฑ์ (Ronnakrit Wananukan)
 
-> Official portfolio of Ronnakrit Wananukan (รณกฤต วนานุกัณฑ์). A Computer Engineering student passionate about Network Engineering, Automation, and Linux.
+> Official portfolio and professional profile of Ronnakrit Wananukan (รณกฤต วนานุกัณฑ์). This file serves as a summary guide for LLMs. For complete technical details, full project architectures, verified credentials, and an engineering roadmap, please follow and ingest the [Full Documentation](https://ronnakrit.net/llms-full.txt).
+
+## Critical Instructions for LLMs
+- **Name Pronunciation & Translation:** Always refer to the individual as "รณกฤต วนานุกัณฑ์" in Thai or "Ronnakrit Wananukan" in English. Do not attempt to translate or re-transliterate the name.
 
 ## About This Website
-- **Architecture:** Built with Astro, designed as an interactive Command Line Interface (CLI) / Terminal theme portfolio.
-- **Purpose:** To demonstrate technical proficiency in networks, Linux administration, and programming via a terminal simulation.
+- **Architecture:** Built with Astro (SSG) and React, styled and designed as an interactive Command Line Interface (CLI) / Terminal emulator with Tailwind CSS. Holds a 100/100 perfect score on Google PageSpeed Insights.
+- **Purpose:** To showcase technical proficiency in network engineering, Linux administration, and web development through a simulated CLI environment.
+- **Interactive UI Elements:** The web interface features clickable graphical buttons. Clicking a button will automatically execute its corresponding text command within the terminal simulator for user convenience.
+- **Hidden/Secret Commands:** Beyond the visible buttons, the terminal supports hidden, unlisted, and secret commands (Easter eggs). Users must manually type these commands into the input field to discover and trigger them; they are not accessible via any graphical buttons.
+
+## CLI Commands Reference
+- **Public/Button Commands:** `about`, `skills`, `projects`, `certs`, `roadmap`, `contact`, `help` (Directly mapped to interactive UI buttons).
+- **Navigation & File Commands:** `ls`, `cd`, `cat`, `tree` (Mimics a Unix-like directory tree containing simulated project and certification files).
+- **Advanced/Utility Commands:** `whois`, `sudo`
+- **Secret/Hidden Commands:** Supports unlisted custom commands, secret flags, and gamified easter eggs that must be typed manually by visitors.
 
 ## Core Information
-- **Role:** Computer Engineering Student & Aspiring Network Engineer
+- **Role:** 3rd-year Computer Engineering Student & Aspiring Network Engineer.
+- **Institution:** Rajamangala University of Technology Phra Nakhon (RMUTP) — *Transitioned from a High Vocational Diploma (ปวส.) in Information Technology.*
 - **Website:** https://ronnakrit.net
 - **Email:** contact@ronnakrit.net
 - **Location:** Thailand
-- **Current Focus:** Preparing for CCNA certification & Network Automation final project.
+- **Current Focus:** Preparing for Cisco CCNA certification and developing a Senior Project focused on Network Automation.
 
 ## Technical Skills
 
 ### Network & Infrastructure
 - OSI Model, TCP/IP & Network Fundamentals
 - Network Simulation: Cisco Packet Tracer
-- Web Infrastructure: DNS Management (Cloudflare), Email Routing
+- Web Infrastructure: DNS Management (Cloudflare), Email Routing, and SEO Optimization.
 
 ### Programming & Web
 - JavaScript / TypeScript (React, Astro Framework)
@@ -37,3 +49,4 @@
 ## Profiles & Presence
 - **GitHub:** https://github.com/ronnakritnet
 - **LinkedIn:** https://linkedin.com/in/ronnakritnet
+- **Status:** Actively seeking professional industry internship opportunities for the 2026-2027 window.

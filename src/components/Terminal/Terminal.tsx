@@ -15,6 +15,7 @@ import { handleKeyDown, handleInputChange } from './utils/keyboardHandlers';
 import { useTerminalState } from './hooks/useTerminalState';
 import { pathArrayToString } from './utils/pathUtils';
 import ASCIIBanner from './ASCIIBanner';
+import { registerCommandExecutor } from '../../utils/commandExecutor';
 
 // ASCII art (moved to constants/ascii.ts)
 // Terminal component
@@ -49,6 +50,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
   
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
+  const [isTyping, setIsTyping] = useState(false);
 
   // Command execution logic
   const executeCommand = useCallback((command: string) => {
@@ -263,6 +265,38 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
       executeCommand(externalCommand);
     }
   }, [externalCommand, executeCommand]);
+
+  // Typing simulation for external command execution
+  const simulateTyping = useCallback(async (command: string) => {
+    if (isTyping) return;
+    
+    setIsTyping(true);
+    setCurrentInput('');
+    
+    // Focus the input field
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+    
+    // Type character by character
+    for (let i = 0; i <= command.length; i++) {
+      setCurrentInput(command.substring(0, i));
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+    
+    // Wait a moment before executing
+    await new Promise(resolve => setTimeout(resolve, 200));
+    
+    // Execute the command
+    executeCommand(command);
+    setCurrentInput('');
+    setIsTyping(false);
+  }, [isTyping, executeCommand]);
+
+  // Register command executor callback
+  useEffect(() => {
+    registerCommandExecutor(simulateTyping);
+  }, [simulateTyping]);
 
   // Input handling using modular keyboard handler
   const handleInput = (e: React.KeyboardEvent<HTMLInputElement>) => {

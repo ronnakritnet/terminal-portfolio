@@ -1,0 +1,95 @@
+/* FAB Button Styling */
+.fab-button {
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: rgb(17 24 39); /* gray-900 */
+  border: 2px solid rgb(34 197 94); /* green-500 */
+  color: rgb(74 222 128); /* green-400 */
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab-button:hover {
+  background-color: rgb(31 41 55); /* gray-800 */
+  border-color: rgb(74 222 128); /* green-400 */
+  color: rgb(134 239 172); /* green-300 */
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.5);
+}
+
+.fab-button:active {
+  transform: scale(0.95);
+}
+
+/* FAB Menu Styling */
+.fab-menu {
+  position: absolute;
+  bottom: 72px;
+  right: 0;
+  background-color: rgb(17 24 39); /* gray-900 */
+  border: 1px solid rgb(34 197 94); /* green-500 */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  min-width: 200px;
+  border-radius: 0;
+}
+
+.fab-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 16px;
+  color: rgb(74 222 128); /* green-400 */
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 14px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.fab-menu-item:hover {
+  background-color: rgb(31 41 55); /* gray-800 */
+  color: rgb(134 239 172); /* green-300 */
+}
+
+.fab-menu-item:active {
+  background-color: rgb(55 65 81); /* gray-700 */
+}
+
+.fab-menu-back {
+  border-bottom: 1px solid rgb(55 65 81); /* gray-700 */
+}
+
+/* Submenu indicator */
+.fab-menu-indicator {
+  float: right;
+  font-size: 12px;
+}
+
+/* Animation for menu appearance */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fab-menu {
+  animation: fadeInUp 0.2s ease-in-out;
+}

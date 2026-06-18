@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fileSystem } from './Terminal/data/fileSystem';
+import { executeCommand } from '../utils/commandExecutor';
 
 interface NavbarProps {
   onCommandExecute: (command: string) => void;
@@ -7,7 +8,6 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ onCommandExecute }) => {
   const [isTyping, setIsTyping] = useState(false);
-  const [currentCommand, setCurrentCommand] = useState('');
   const [isDesktopDropdownOpen, setIsDesktopDropdownOpen] = useState(false);
   const [isMobileDropdownOpen, setIsMobileDropdownOpen] = useState(false);
   const [isCertsDesktopDropdownOpen, setIsCertsDesktopDropdownOpen] = useState(false);
@@ -18,17 +18,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCommandExecute }) => {
   const certsMobileDropdownRef = useRef<HTMLDivElement>(null);
 
   const simulateTyping = async (command: string) => {
+    if (isTyping) return;
     setIsTyping(true);
-    setCurrentCommand('');
-    
-    for (let i = 0; i <= command.length; i++) {
-      setCurrentCommand(command.substring(0, i));
-      await new Promise(resolve => setTimeout(resolve, 50));
-    }
-    
-    await new Promise(resolve => setTimeout(resolve, 200));
-    onCommandExecute(command);
-    setCurrentCommand('');
+    await executeCommand(command);
     setIsTyping(false);
   };
 
@@ -212,7 +204,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCommandExecute }) => {
         {/* Typing Indicator */}
         {isTyping && (
           <div className="mt-2 text-xs text-gray-400 font-mono">
-            Executing: <span className="text-green-400">{currentCommand}</span>
+            Executing command...
             <span className="cursor-blink">_</span>
           </div>
         )}

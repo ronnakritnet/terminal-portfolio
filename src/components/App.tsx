@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Terminal from './Terminal/Terminal';
 import Footer from './Footer';
+import FAB from './FAB';
 
 const App: React.FC = () => {
   const [externalCommand, setExternalCommand] = useState<string>('');
@@ -34,6 +35,7 @@ const App: React.FC = () => {
         <Terminal externalCommand={externalCommand} />
       </main>
       <Footer />
+      <FAB />
     </div>
   );
 };

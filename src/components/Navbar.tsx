@@ -3,7 +3,7 @@ import { fileSystem } from './Terminal/data/fileSystem';
 import { executeCommand } from '../utils/commandExecutor';
 
 interface NavbarProps {
-  onCommandExecute: (command: string) => void;
+  onCommandExecute?: (command: string) => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onCommandExecute }) => {

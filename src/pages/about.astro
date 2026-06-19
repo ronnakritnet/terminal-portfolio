@@ -1,0 +1,130 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content={Astro.generator} />
+        
+        <title>About | RonnakritNet</title>
+        <meta name="description" content="About Ronnakrit Wananukan - Computer Engineering student passionate about Network Engineering, Automation, and Linux." />
+        <meta name="keywords" content="Ronnakrit, About, Computer Engineering, Network Engineer, Portfolio, CLI, Terminal" />
+        <meta name="author" content="Ronnakrit Wananukan" />
+        
+        <meta property="og:title" content="About | RonnakritNet" />
+        <meta property="og:description" content="Learn about Ronnakrit Wananukan - Computer Engineering student passionate about Network Engineering, Automation, and Linux." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://ronnakrit.net/about" />
+        <meta property="og:image" content="https://ronnakrit.net/og-preview.png" />
+        <meta property="og:image:alt" content="About | RonnakritNet" />
+        <meta property="og:site_name" content="RonnakritNet" />
+        
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About | RonnakritNet" />
+        <meta name="twitter:description" content="Learn about Ronnakrit Wananukan - Computer Engineering student passionate about Network Engineering, Automation, and Linux." />
+        <meta name="twitter:image" content="https://ronnakrit.net/og-preview.png" />
+        <meta name="twitter:image:alt" content="About | RonnakritNet" />
+        
+        <meta name="robots" content="index, follow" />
+        <meta name="language" content="English" />
+        <meta name="theme-color" content="#0D0D0D" />
+	</head>
+	<body class="bg-black text-green-400 font-mono min-h-screen flex flex-col">
+		<Navbar client:load onCommandExecute={() => {}} />
+		
+		<main class="flex-1 flex items-center justify-center px-4 py-16">
+			<div class="w-full max-w-2xl">
+				<!-- CLI-style container -->
+				<div class="border border-green-600 bg-gray-900/50 p-8 rounded-lg shadow-lg">
+					<!-- Terminal header -->
+					<div class="border-b border-green-600 pb-4 mb-6">
+						<div class="flex items-center gap-2 mb-2">
+							<span class="text-red-500">●</span>
+							<span class="text-yellow-500">●</span>
+							<span class="text-green-500">●</span>
+							<span class="ml-4 text-gray-400 text-sm">ronnakrit@portfolio: ~/about</span>
+						</div>
+						<h1 class="text-2xl font-bold text-green-400 tracking-wider">about_me.txt</h1>
+					</div>
+					
+					<!-- About content -->
+					<div class="space-y-6">
+						<div class="flex items-start gap-3">
+							<span class="text-green-500 font-bold">$</span>
+							<div class="flex-1">
+								<p class="text-gray-400 mb-2"># Profile Information</p>
+								<div class="space-y-2">
+									<p><span class="text-green-400">Name:</span> Ronnakrit Wananukan</p>
+									<p><span class="text-green-400">Role:</span> Computer Engineering Student</p>
+									<p><span class="text-green-400">Focus:</span> Network Engineering & Automation</p>
+								</div>
+							</div>
+						</div>
+						
+						<div class="flex items-start gap-3">
+							<span class="text-green-500 font-bold">$</span>
+							<div class="flex-1">
+								<p class="text-gray-400 mb-2"># Technical Interests</p>
+								<div class="space-y-2">
+									<p>• Linux Systems Administration</p>
+									<p>• Network Automation & Scripting</p>
+									<p>• CCNA Certification Preparation</p>
+									<p>• Web Administration & SEO Optimization</p>
+								</div>
+							</div>
+						</div>
+						
+						<div class="flex items-start gap-3">
+							<span class="text-green-500 font-bold">$</span>
+							<div class="flex-1">
+								<p class="text-gray-400 mb-2"># Current Focus</p>
+								<p class="text-green-400">
+									Actively preparing for CCNA certification while building practical experience in network engineering and automation projects.
+								</p>
+							</div>
+						</div>
+						
+						<div class="border-t border-green-600/30 pt-6 mt-6">
+							<div class="flex items-start gap-3">
+								<span class="text-green-500 font-bold">$</span>
+								<div class="flex-1">
+									<p class="text-gray-400 mb-2"># System Status</p>
+									<p class="text-green-400">
+										<span class="animate-pulse">●</span> Learning & Building
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Terminal prompt -->
+					<div class="mt-8 pt-4 border-t border-green-600/30">
+						<div class="flex items-center gap-2">
+							<span class="text-green-500 font-bold">$</span>
+							<span class="text-gray-500 animate-pulse">_</span>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Back to terminal link -->
+				<div class="mt-6 text-center">
+					<a 
+						href="/" 
+						class="text-green-400 hover:text-green-300 hover:underline transition-colors duration-200 text-sm"
+					>
+						[ Return to Terminal ]
+					</a>
+				</div>
+			</div>
+		</main>
+		
+		<Footer client:load />
+	</body>
+</html>

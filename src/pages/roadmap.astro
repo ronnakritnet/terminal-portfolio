@@ -1,0 +1,123 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content={Astro.generator} />
+        
+        <title>Roadmap | RonnakritNet</title>
+        <meta name="description" content="Engineering roadmap and career journey of Ronnakrit Wananukan - Network Engineering education and professional development plan for 2026-2027." />
+        <meta name="keywords" content="Ronnakrit, Roadmap, Computer Engineering, Network Engineer, Portfolio, CLI, Terminal" />
+        <meta name="author" content="Ronnakrit Wananukan" />
+        
+        <meta property="og:title" content="Roadmap | RonnakritNet" />
+        <meta property="og:description" content="Engineering roadmap and career journey of Ronnakrit Wananukan - Network Engineering education and professional development plan for 2026-2027." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://ronnakrit.net/roadmap/" />
+        <meta property="og:image" content="https://ronnakrit.net/og-preview.png" />
+        <meta property="og:image:alt" content="Roadmap | RonnakritNet" />
+        <meta property="og:site_name" content="RonnakritNet" />
+        
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Roadmap | RonnakritNet" />
+        <meta name="twitter:description" content="Engineering roadmap and career journey of Ronnakrit Wananukan - Network Engineering education and professional development plan for 2026-2027." />
+        <meta name="twitter:image" content="https://ronnakrit.net/og-preview.png" />
+        <meta name="twitter:image:alt" content="Roadmap | RonnakritNet" />
+        
+        <meta name="robots" content="index, follow" />
+        <meta name="language" content="English" />
+        <meta name="theme-color" content="#0D0D0D" />
+	</head>
+	<body class="bg-black text-green-400 font-mono min-h-screen flex flex-col">
+		<Navbar client:load />
+		
+		<main class="flex-1 flex items-center justify-center px-4 py-16">
+			<div class="w-full max-w-2xl">
+				<!-- CLI-style container -->
+				<div class="border border-green-600 bg-gray-900/50 p-8 rounded-lg shadow-lg">
+					<!-- Terminal header -->
+					<div class="border-b border-green-600 pb-4 mb-6">
+						<div class="flex items-center gap-2 mb-2">
+							<span class="text-red-500">●</span>
+							<span class="text-yellow-500">●</span>
+							<span class="text-green-500">●</span>
+							<span class="ml-4 text-gray-400 text-sm">ronnakrit@portfolio: ~/roadmap</span>
+						</div>
+						<h1 class="text-2xl font-bold text-green-400 tracking-wider">engineering_roadmap.md</h1>
+					</div>
+					
+					<!-- Roadmap content -->
+					<div class="space-y-6">
+						<div class="flex items-start gap-3">
+							<span class="text-green-500 font-bold">$</span>
+							<div class="flex-1">
+								<p class="text-green-400 font-bold mb-2"># ROADMAP 2026-2027</p>
+								<p class="text-gray-400 mb-4">STATUS KEYS: [✔] Completed | [>] In Progress | [ ] To Do</p>
+								<div class="border-b border-green-600/30 mb-4"></div>
+								
+								<p class="text-gray-400 mb-2">## PHASE 1: FOUNDATION & PREPARATION (CURRENT - 2026)</p>
+								<div class="space-y-1 text-green-400">
+									<p>- [✔] Vocational IT Diploma to University Transfer</p>
+									<p>- [>] Network Fundamentals & CCNA Preparation</p>
+									<p>- [>] Linux Systems & Ubuntu Environment Basics</p>
+									<p>- [>] Preparing Python Basics for Network Automation</p>
+									<p>- [>] Maintaining Portfolio Site & Web Infrastructure</p>
+									<p>- [ ] Improve Technical Typing Speed (Target: 80 WPM)</p>
+								</div>
+								
+								<p class="text-gray-400 mb-2 mt-4">## PHASE 2: FINAL YEAR & PROFESSIONAL (2027)</p>
+								<div class="space-y-1 text-green-400">
+									<p>- [ ] Secure a Network Engineering Internship</p>
+									<p>- [ ] Develop Computer Engineering Final Project (Network Automation)</p>
+									<p>- [ ] Master Network Automation Libraries (Netmiko, Paramiko, Ansible)</p>
+									<p>- [ ] Launch Tech YouTube Channel (Documenting My Engineering Journey)</p>
+									<p>- [ ] Graduate in Computer Engineering (RMUTP)</p>
+								</div>
+							</div>
+						</div>
+						
+						<div class="border-t border-green-600/30 pt-6 mt-6">
+							<div class="flex items-start gap-3">
+								<span class="text-green-500 font-bold">$</span>
+								<div class="flex-1">
+									<p class="text-gray-400 mb-2"># Progress</p>
+									<p class="text-green-400">
+										<span class="animate-pulse">●</span> Actively pursuing Phase 1 objectives
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Terminal prompt -->
+					<div class="mt-8 pt-4 border-t border-green-600/30">
+						<div class="flex items-center gap-2">
+							<span class="text-green-500 font-bold">$</span>
+							<span class="text-gray-500 animate-pulse">_</span>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Back to terminal link -->
+				<div class="mt-6 text-center">
+					<a 
+						href="/" 
+						class="text-green-400 hover:text-green-300 hover:underline transition-colors duration-200 text-sm"
+					>
+						[ Return to Terminal ]
+					</a>
+				</div>
+			</div>
+		</main>
+		
+		<Footer client:load />
+	</body>
+</html>

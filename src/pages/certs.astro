@@ -1,0 +1,142 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content={Astro.generator} />
+        
+        <title>Certifications | RonnakritNet</title>
+        <meta name="description" content="Professional certifications of Ronnakrit Wananukan - Google IT Support Professional and Google Cybersecurity Professional credentials." />
+        <meta name="keywords" content="Ronnakrit, Certifications, Computer Engineering, Network Engineer, Portfolio, CLI, Terminal" />
+        <meta name="author" content="Ronnakrit Wananukan" />
+        
+        <meta property="og:title" content="Certifications | RonnakritNet" />
+        <meta property="og:description" content="Professional certifications of Ronnakrit Wananukan - Google IT Support Professional and Google Cybersecurity Professional credentials." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://ronnakrit.net/certs/" />
+        <meta property="og:image" content="https://ronnakrit.net/og-preview.png" />
+        <meta property="og:image:alt" content="Certifications | RonnakritNet" />
+        <meta property="og:site_name" content="RonnakritNet" />
+        
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Certifications | RonnakritNet" />
+        <meta name="twitter:description" content="Professional certifications of Ronnakrit Wananukan - Google IT Support Professional and Google Cybersecurity Professional credentials." />
+        <meta name="twitter:image" content="https://ronnakrit.net/og-preview.png" />
+        <meta name="twitter:image:alt" content="Certifications | RonnakritNet" />
+        
+        <meta name="robots" content="index, follow" />
+        <meta name="language" content="English" />
+        <meta name="theme-color" content="#0D0D0D" />
+	</head>
+	<body class="bg-black text-green-400 font-mono min-h-screen flex flex-col">
+		<Navbar client:load />
+		
+		<main class="flex-1 flex items-center justify-center px-4 py-16">
+			<div class="w-full max-w-2xl">
+				<!-- CLI-style container -->
+				<div class="border border-green-600 bg-gray-900/50 p-8 rounded-lg shadow-lg">
+					<!-- Terminal header -->
+					<div class="border-b border-green-600 pb-4 mb-6">
+						<div class="flex items-center gap-2 mb-2">
+							<span class="text-red-500">●</span>
+							<span class="text-yellow-500">●</span>
+							<span class="text-green-500">●</span>
+							<span class="ml-4 text-gray-400 text-sm">ronnakrit@portfolio: ~/certs</span>
+						</div>
+						<h1 class="text-2xl font-bold text-green-400 tracking-wider">verified_credentials.json</h1>
+					</div>
+					
+					<!-- Certifications content -->
+					<div class="space-y-6">
+						<div class="flex items-start gap-3">
+							<span class="text-green-500 font-bold">$</span>
+							<div class="flex-1">
+								<p class="text-gray-400 mb-4">=========================================================</p>
+								<p class="text-green-400 font-bold mb-2">CERTIFICATION: GOOGLE IT SUPPORT PROFESSIONAL</p>
+								<p class="text-gray-400 mb-4">=========================================================</p>
+								<div class="space-y-1 text-green-400 mb-4">
+									<p>Issuer       : Google (via Coursera)</p>
+									<p>Status       : Completed & Verified</p>
+									<p>Credential   : <a href="https://coursera.org/share/6ee83fcc650e37c3d8cd35c73961b3e3" target="_blank" rel="noopener noreferrer" class="text-green-400 hover:text-green-300 hover:underline transition-colors">https://coursera.org/share/6ee83fcc650e37c3d8cd35c73961b3e3</a></p>
+									<p>Core Focus   : IT Foundations & Infrastructure Support</p>
+								</div>
+								
+								<p class="text-gray-400 mb-2">KEY KNOWLEDGE AREAS:</p>
+								<div class="space-y-1 text-green-400 mb-4">
+									<p>- Computer Networking (The Bits and Bytes of Network Protocols)</p>
+									<p>- Operating Systems (Becoming a Windows & Linux Power User)</p>
+									<p>- System Administration & IT Infrastructure Services</p>
+									<p>- IT Security (Defense Against the Digital Dark Arts)</p>
+									<p>- Technical Support Fundamentals & Infrastructure Troubleshooting</p>
+								</div>
+								
+								<p class="text-gray-400 my-4">---------------------------------------------------------</p>
+								
+								<p class="text-gray-400 mb-4">=========================================================</p>
+								<p class="text-green-400 font-bold mb-2">CERTIFICATION: GOOGLE CYBERSECURITY PROFESSIONAL</p>
+								<p class="text-gray-400 mb-4">=========================================================</p>
+								<div class="space-y-1 text-green-400 mb-4">
+									<p>Issuer       : Google (via Coursera)</p>
+									<p>Status       : Completed & Verified</p>
+									<p>Credential   : <a href="https://coursera.org/share/707bec8c1e18e2be9c0a735b262b32d3" target="_blank" rel="noopener noreferrer" class="text-green-400 hover:text-green-300 hover:underline transition-colors">https://coursera.org/share/707bec8c1e18e2be9c0a735b262b32d3</a></p>
+									<p>Core Focus   : Security Operations & Infrastructure Defense</p>
+								</div>
+								
+								<p class="text-gray-400 mb-2">KEY KNOWLEDGE AREAS:</p>
+								<div class="space-y-1 text-green-400 mb-4">
+									<p>- Networks and Network Security (Connect & Protect Frameworks)</p>
+									<p>- Tools of the Trade (Linux CLI & SQL Data Querying)</p>
+									<p>- Automate Cybersecurity Tasks (Python Scripting Fundamentals)</p>
+									<p>- Threat & Vulnerability Management (Assets & Risk Mitigation)</p>
+									<p>- Detection and Response (Sound the Alarm / Incident Mitigation)</p>
+								</div>
+								
+								<p class="text-gray-400 mt-4">---------------------------------------------------------</p>
+							</div>
+						</div>
+						
+						<div class="border-t border-green-600/30 pt-6 mt-6">
+							<div class="flex items-start gap-3">
+								<span class="text-green-500 font-bold">$</span>
+								<div class="flex-1">
+									<p class="text-gray-400 mb-2"># Status</p>
+									<p class="text-green-400">
+										<span class="animate-pulse">●</span> 2 professional certifications verified
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Terminal prompt -->
+					<div class="mt-8 pt-4 border-t border-green-600/30">
+						<div class="flex items-center gap-2">
+							<span class="text-green-500 font-bold">$</span>
+							<span class="text-gray-500 animate-pulse">_</span>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Back to terminal link -->
+				<div class="mt-6 text-center">
+					<a 
+						href="/" 
+						class="text-green-400 hover:text-green-300 hover:underline transition-colors duration-200 text-sm"
+					>
+						[ Return to Terminal ]
+					</a>
+				</div>
+			</div>
+		</main>
+		
+		<Footer client:load />
+	</body>
+</html>

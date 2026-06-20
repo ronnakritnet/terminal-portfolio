@@ -1,0 +1,150 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content={Astro.generator} />
+        
+        <title>Projects | RonnakritNet</title>
+        <meta name="description" content="Portfolio projects of Ronnakrit Wananukan - Interactive terminal portfolio and Academic Schedule Manager system." />
+        <meta name="keywords" content="Ronnakrit, Projects, Computer Engineering, Network Engineer, Portfolio, CLI, Terminal" />
+        <meta name="author" content="Ronnakrit Wananukan" />
+        
+        <meta property="og:title" content="Projects | RonnakritNet" />
+        <meta property="og:description" content="Portfolio projects of Ronnakrit Wananukan - Interactive terminal portfolio and Academic Schedule Manager system." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://ronnakrit.net/projects/" />
+        <meta property="og:image" content="https://ronnakrit.net/og-preview.png" />
+        <meta property="og:image:alt" content="Projects | RonnakritNet" />
+        <meta property="og:site_name" content="RonnakritNet" />
+        
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Projects | RonnakritNet" />
+        <meta name="twitter:description" content="Portfolio projects of Ronnakrit Wananukan - Interactive terminal portfolio and Academic Schedule Manager system." />
+        <meta name="twitter:image" content="https://ronnakrit.net/og-preview.png" />
+        <meta name="twitter:image:alt" content="Projects | RonnakritNet" />
+        
+        <meta name="robots" content="index, follow" />
+        <meta name="language" content="English" />
+        <meta name="theme-color" content="#0D0D0D" />
+	</head>
+	<body class="bg-black text-green-400 font-mono min-h-screen flex flex-col">
+		<Navbar client:load />
+		
+		<main class="flex-1 flex items-center justify-center px-4 py-16">
+			<div class="w-full max-w-2xl">
+				<!-- CLI-style container -->
+				<div class="border border-green-600 bg-gray-900/50 p-8 rounded-lg shadow-lg">
+					<!-- Terminal header -->
+					<div class="border-b border-green-600 pb-4 mb-6">
+						<div class="flex items-center gap-2 mb-2">
+							<span class="text-red-500">●</span>
+							<span class="text-yellow-500">●</span>
+							<span class="text-green-500">●</span>
+							<span class="ml-4 text-gray-400 text-sm">ronnakrit@portfolio: ~/projects</span>
+						</div>
+						<h1 class="text-2xl font-bold text-green-400 tracking-wider">deployed_projects.log</h1>
+					</div>
+					
+					<!-- Projects content -->
+					<div class="space-y-6">
+						<div class="flex items-start gap-3">
+							<span class="text-green-500 font-bold">$</span>
+							<div class="flex-1">
+								<p class="text-gray-400 mb-4">=========================================================</p>
+								<p class="text-green-400 font-bold mb-2">PROJECT 01: RONNAKRIT.NET</p>
+								<p class="text-gray-400 mb-4">=========================================================</p>
+								<p class="text-green-400 mb-4">
+									An interactive personal portfolio featuring a functional terminal interface, tailored for a Network Automation & Engineering persona.
+								</p>
+								
+								<p class="text-gray-400 mb-2">FEATURES:</p>
+								<div class="space-y-1 text-green-400 mb-4">
+									<p>- Interactive Command Line Experience</p>
+									<p>- Basic File System Navigation (Beta / Under Development)</p>
+									<p>- High-Performance Optimization (100% PageSpeed Insights Score)</p>
+									<p>- Production Deployment via GitHub Pages & Cloudflare</p>
+								</div>
+								
+								<p class="text-gray-400 mb-2">TECHNOLOGIES:</p>
+								<div class="space-y-1 text-green-400">
+									<p>- Framework       : Astro, React</p>
+									<p>- Language        : TypeScript</p>
+									<p>- Styling         : Tailwind CSS</p>
+									<p>- Tooling & Infr  : Cloudflare, Git, Windsurf AI</p>
+								</div>
+								
+								<p class="text-gray-400 my-4">---------------------------------------------------------</p>
+								
+								<p class="text-gray-400 mb-4">=========================================================</p>
+								<p class="text-green-400 font-bold mb-2">PROJECT 02: ACADEMIC SCHEDULE MANAGER</p>
+								<p class="text-gray-400 mb-4">=========================================================</p>
+								<p class="text-green-400 mb-4">
+									A web-based system designed to manage and visualize academic schedules across three different dimensions: Students, Teachers, and Classrooms.
+								</p>
+								
+								<p class="text-gray-400 mb-2">FEATURES:</p>
+								<div class="space-y-1 text-green-400 mb-4">
+									<p>- Triple-View Scheduling Interface (Student, Teacher, Room)</p>
+									<p>- Conflict-Free Session Management (Automated Schedule Collision Check)</p>
+									<p>- Real-Time Dynamic Visualization for Classroom Usage</p>
+									<p>- Developed with AI-Assisted Engineering Workflow</p>
+								</div>
+								
+								<p class="text-gray-400 mb-2">TECHNOLOGIES:</p>
+								<div class="space-y-1 text-green-400">
+									<p>- Backend       : PHP</p>
+									<p>- Database      : MySQL (phpMyAdmin)</p>
+									<p>- Environment   : XAMPP Localhost Stack (Academic Sandbox)</p>
+									<p>- Tooling       : Claude AI, Git</p>
+								</div>
+								
+								<p class="text-gray-400 mt-4">---------------------------------------------------------</p>
+							</div>
+						</div>
+						
+						<div class="border-t border-green-600/30 pt-6 mt-6">
+							<div class="flex items-start gap-3">
+								<span class="text-green-500 font-bold">$</span>
+								<div class="flex-1">
+									<p class="text-gray-400 mb-2"># Status</p>
+									<p class="text-green-400">
+										<span class="animate-pulse">●</span> 2 projects deployed & operational
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Terminal prompt -->
+					<div class="mt-8 pt-4 border-t border-green-600/30">
+						<div class="flex items-center gap-2">
+							<span class="text-green-500 font-bold">$</span>
+							<span class="text-gray-500 animate-pulse">_</span>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Back to terminal link -->
+				<div class="mt-6 text-center">
+					<a 
+						href="/" 
+						class="text-green-400 hover:text-green-300 hover:underline transition-colors duration-200 text-sm"
+					>
+						[ Return to Terminal ]
+					</a>
+				</div>
+			</div>
+		</main>
+		
+		<Footer client:load />
+	</body>
+</html>

@@ -23,5 +23,5 @@ export default defineConfig({
   },
   
   // Trailing slash for GitHub Pages compatibility
-  trailingSlash: 'always'
+  trailingSlash: 'ignore'
 });

@@ -30,7 +30,7 @@ const App: React.FC = () => {
 
   return (
     <div className="h-[100dvh] bg-black flex flex-col">
-      <Navbar onCommandExecute={handleCommandExecute} />
+      <Navbar />
       <main className="flex-1">
         <Terminal externalCommand={externalCommand} />
       </main>

@@ -342,8 +342,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
           {/* Terminal Content */}
           <div 
             ref={terminalRef}
-            className="px-6 py-4 mb-12 md:mb-0"
-            style={{ backgroundColor: 'var(--terminal-bg)' }}
+            className="px-6 py-4 mb-12 md:mb-0 border border-green-600 bg-gray-900/50 rounded-lg shadow-lg"
           >
             {/* ASCII Banner - First element in terminal */}
             {showBanner && <ASCIIBanner isMobile={isMobile} />}

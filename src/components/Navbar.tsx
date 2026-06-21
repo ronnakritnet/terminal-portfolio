@@ -4,10 +4,10 @@ const Navbar: React.FC = () => {
 
   const navItems = [
     { label: 'About', href: '/about' },
-    { label: 'Skills', href: '/skills/' },
-    { label: 'Projects', href: '/projects/' },
-    { label: 'Certifications', href: '/certs/' },
-    { label: 'Roadmap', href: '/roadmap/' },
+    { label: 'Skills', href: '/skills' },
+    { label: 'Projects', href: '/projects' },
+    { label: 'Certifications', href: '/certs' },
+    { label: 'Roadmap', href: '/roadmap' },
     { label: 'Contact', href: '/contact' }
   ];
 

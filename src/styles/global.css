@@ -21,7 +21,7 @@
   }
   
   body {
-    background-color: var(--terminal-bg);
+    background-color: #000000;
     color: var(--terminal-green);
     margin: 0;
     padding: 0;

@@ -39,7 +39,7 @@ import Footer from '../components/Footer';
 	<body class="bg-black text-green-400 font-mono min-h-screen flex flex-col">
 		<Navbar client:load />
 		
-		<main class="flex-1 flex items-center justify-center px-4 py-16">
+		<main class="flex-1 flex items-center justify-center px-4 pt-20">
 			<div class="w-full max-w-2xl">
 				<!-- CLI-style container -->
 				<div class="border border-green-600 bg-gray-900/50 p-8 rounded-lg shadow-lg">
@@ -122,16 +122,17 @@ import Footer from '../components/Footer';
 							<span class="text-gray-500 animate-pulse">_</span>
 						</div>
 					</div>
-				</div>
-				
-				<!-- Back to terminal link -->
-				<div class="mt-6 text-center">
-					<a 
-						href="/" 
-						class="text-green-400 hover:text-green-300 hover:underline transition-colors duration-200 text-sm"
-					>
-						[ Return to Terminal ]
-					</a>
+					
+					<!-- Back to terminal link -->
+					<div class="mt-8 text-center">
+						<a 
+							href="/" 
+							class="hover:text-green-300 hover:underline transition-colors duration-200 text-sm"
+							style="color: var(--terminal-light-green);"
+						>
+							[ Return to Terminal ]
+						</a>
+					</div>
 				</div>
 			</div>
 		</main>

@@ -41,7 +41,7 @@ const FAB: React.FC<FABProps> = () => {
         onClick={handleFABClick}
         className="fab-button"
       >
-        &gt;_R
+        <img src="/favicon.svg" alt="R" style={{ width: '100%', height: '100%', imageRendering: 'pixelated' }} />
       </button>
       
       <FABMenu

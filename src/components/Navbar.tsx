@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
           {/* Logo/Title */}
           <div className="flex items-start space-x-2">
             <a href="/" className="text-green-400 font-mono text-lg font-bold hover:text-green-300 transition-colors">
-              ronnakrit.net
+              &gt;_ronnakrit.net
             </a>
           </div>
 

@@ -165,6 +165,11 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
           const projectPath = mainCommand.endsWith('.md') ? mainCommand : mainCommand + '.md';
           const catResult = handleCatCommand([projectPath], currentPath, fileSystem);
           output = catResult;
+        } else if (mainCommand.startsWith('certs/')) {
+          // Auto-append .md if not present and execute as cat command for certs
+          const certPath = mainCommand.endsWith('.md') ? mainCommand : mainCommand + '.md';
+          const catResult = handleCatCommand([certPath], currentPath, fileSystem);
+          output = catResult;
         } else {
           output = `-bash: ${mainCommand}: command not found\nType 'help' for available commands.`;
         }

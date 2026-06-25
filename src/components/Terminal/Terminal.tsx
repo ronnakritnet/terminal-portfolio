@@ -158,8 +158,16 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
         output = fileSystem['roadmap.md']?.content || 'Roadmap content not found';
         break;
 
+      // Handle direct project path execution (e.g., "projects/ronnakrit-net")
       default:
-        output = `-bash: ${mainCommand}: command not found\nType 'help' for available commands.`;
+        if (mainCommand.startsWith('projects/')) {
+          // Auto-append .md if not present and execute as cat command
+          const projectPath = mainCommand.endsWith('.md') ? mainCommand : mainCommand + '.md';
+          const catResult = handleCatCommand([projectPath], currentPath, fileSystem);
+          output = catResult;
+        } else {
+          output = `-bash: ${mainCommand}: command not found\nType 'help' for available commands.`;
+        }
         break;
     }
 

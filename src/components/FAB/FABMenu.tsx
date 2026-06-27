@@ -29,8 +29,8 @@ const FABMenu: React.FC<FABMenuProps> = ({ isOpen, onClose, onCommandSelect }) =
   };
 
   const handleFileClick = (filename: string, directory: string) => {
-    const fullFilename = filename.endsWith('.md') ? filename : `${filename}.md`;
-    onCommandSelect(`cat ${directory}/${fullFilename}`);
+    const filenameWithoutMd = filename.replace('.md', '');
+    onCommandSelect(`${directory}/${filenameWithoutMd}`);
   };
 
   if (!isOpen) return null;

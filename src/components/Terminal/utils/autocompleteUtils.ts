@@ -47,6 +47,30 @@ export const getContextualCompletions = (
   currentPathArray: PathArray,
   fileSystem: FileSystem
 ): string[] => {
+  // Handle direct path completion for projects/ and certs/ prefixes
+  const DIRECT_PATH_PREFIXES = ['projects/', 'certs/'];
+  for (const prefix of DIRECT_PATH_PREFIXES) {
+    if (input.startsWith(prefix)) {
+      const partialFilename = input.slice(prefix.length);
+      const directory = prefix.slice(0, -1); // Remove trailing slash
+      
+      // Navigate to the directory's children
+      const dirNode = fileSystem[directory];
+      if (dirNode && dirNode.type === 'directory' && dirNode.children) {
+        const files = Object.keys(dirNode.children).filter(
+          (file) => dirNode.children && dirNode.children[file].type === 'file'
+        );
+        
+        // Filter matches and strip .md extensions
+        const matches = files
+          .filter((file) => file.replace('.md', '').startsWith(partialFilename))
+          .map((file) => `${prefix}${file.replace('.md', '')}`);
+        
+        return matches;
+      }
+    }
+  }
+  
   const { command, remaining } = parseCommandContext(input);
   
   // If no command yet, suggest global commands

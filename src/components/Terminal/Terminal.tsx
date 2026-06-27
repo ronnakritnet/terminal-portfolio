@@ -158,19 +158,32 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
         output = fileSystem['roadmap.md']?.content || 'Roadmap content not found';
         break;
 
-      // Handle direct project path execution (e.g., "projects/ronnakrit-net")
+      // Handle direct path execution for allowed directories
       default:
-        if (mainCommand.startsWith('projects/')) {
-          // Auto-append .md if not present and execute as cat command
-          const projectPath = mainCommand.endsWith('.md') ? mainCommand : mainCommand + '.md';
-          const catResult = handleCatCommand([projectPath], currentPath, fileSystem);
-          output = catResult;
-        } else if (mainCommand.startsWith('certs/')) {
-          // Auto-append .md if not present and execute as cat command for certs
-          const certPath = mainCommand.endsWith('.md') ? mainCommand : mainCommand + '.md';
-          const catResult = handleCatCommand([certPath], currentPath, fileSystem);
-          output = catResult;
-        } else {
+        const DIRECT_PATH_PREFIXES = ['projects/', 'certs/'];
+        let handled = false;
+        
+        for (const prefix of DIRECT_PATH_PREFIXES) {
+          if (mainCommand.startsWith(prefix)) {
+            const filename = mainCommand.slice(prefix.length);
+            
+            // Validate that a filename was provided
+            if (!filename) {
+              output = `-bash: ${mainCommand}: No file specified`;
+              handled = true;
+              break;
+            }
+            
+            // Auto-append .md if not present and execute as cat command
+            const fullPath = mainCommand.endsWith('.md') ? mainCommand : mainCommand + '.md';
+            const catResult = handleCatCommand([fullPath], currentPath, fileSystem);
+            output = catResult;
+            handled = true;
+            break;
+          }
+        }
+        
+        if (!handled) {
           output = `-bash: ${mainCommand}: command not found\nType 'help' for available commands.`;
         }
         break;

@@ -2,6 +2,12 @@ import { useState, useCallback } from 'react';
 import { useCommandHistory } from './useCommandHistory';
 import type { TerminalLine, PathArray } from '../types';
 
+// Terminal Constants
+const TERMINAL_CONSTANTS = {
+  TOAST_DURATION_MS: 2500,
+  MOBILE_BREAKPOINT_PX: 768,
+} as const;
+
 export const useTerminalState = () => {
   // Command history
   const history = useCommandHistory();
@@ -20,12 +26,12 @@ export const useTerminalState = () => {
   // Toast notification handler
   const showToast = useCallback((message: string) => {
     setToast(message);
-    setTimeout(() => setToast(null), 2500);
+    setTimeout(() => setToast(null), TERMINAL_CONSTANTS.TOAST_DURATION_MS);
   }, []);
 
   // Mobile detection
   const checkMobile = useCallback(() => {
-    setIsMobile(window.innerWidth <= 768);
+    setIsMobile(window.innerWidth <= TERMINAL_CONSTANTS.MOBILE_BREAKPOINT_PX);
   }, []);
 
   return {

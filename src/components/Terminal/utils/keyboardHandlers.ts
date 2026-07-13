@@ -3,6 +3,29 @@ import { COMMANDS_DESC } from '../data/commands';
 import { getFirstContextualMatch, getContextualCompletions, parseCommandContext } from './autocompleteUtils';
 import type { FileSystem, PathArray } from '../types';
 
+// Terminal Constants
+const TERMINAL_CONSTANTS = {
+  SUGGESTION_DISPLAY_DURATION_MS: 2000,
+  GHOST_SUGGESTION_DEBOUNCE_MS: 150,
+} as const;
+
+// Debounce utility function
+const debounce = <T extends (...args: any[]) => void>(
+  func: T,
+  wait: number
+): ((...args: Parameters<T>) => void) => {
+  let timeout: number | null = null;
+  
+  return (...args: Parameters<T>) => {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    timeout = setTimeout(() => {
+      func(...args);
+    }, wait);
+  };
+};
+
 // Get first matching command (same logic as ghost suggestion)
 export const getFirstMatch = (currentInput: string): string => {
   if (!currentInput) return '';
@@ -13,7 +36,7 @@ export const getFirstMatch = (currentInput: string): string => {
   ) || '';
 };
 
-// Ghost suggestion logic with context awareness
+// Ghost suggestion logic with context awareness (debounced)
 export const updateGhostSuggestion = (
   currentInput: string,
   currentPathArray: PathArray,
@@ -23,6 +46,9 @@ export const updateGhostSuggestion = (
   const match = getFirstContextualMatch(currentInput, currentPathArray, fileSystem);
   setGhostSuggestion(match);
 };
+
+// Debounced version of ghost suggestion update
+export const debouncedUpdateGhostSuggestion = debounce(updateGhostSuggestion, TERMINAL_CONSTANTS.GHOST_SUGGESTION_DEBOUNCE_MS);
 
 // Accept ghost suggestion
 export const acceptGhostSuggestion = (
@@ -75,7 +101,7 @@ export const handleTabCompletion = (
     });
     
     setSuggestions(simpleMatches);
-    setTimeout(() => setSuggestions([]), 2000);
+    setTimeout(() => setSuggestions([]), TERMINAL_CONSTANTS.SUGGESTION_DISPLAY_DURATION_MS);
   }
 };
 
@@ -143,7 +169,7 @@ export const handleKeyDown = (
   }
 };
 
-// Handle input change for ghost suggestion
+// Handle input change for ghost suggestion (debounced)
 export const handleInputChange = (
   e: React.ChangeEvent<HTMLInputElement>,
   currentPathArray: PathArray,
@@ -153,5 +179,5 @@ export const handleInputChange = (
 ): void => {
   const newValue = e.target.value;
   setCurrentInput(newValue);
-  updateGhostSuggestion(newValue, currentPathArray, fileSystem, setGhostSuggestion);
+  debouncedUpdateGhostSuggestion(newValue, currentPathArray, fileSystem, setGhostSuggestion);
 };

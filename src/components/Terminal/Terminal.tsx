@@ -17,6 +17,17 @@ import { pathArrayToString } from './utils/pathUtils';
 import ASCIIBanner from './ASCIIBanner';
 import { registerCommandExecutor } from '../../utils/commandExecutor';
 
+// Terminal Constants
+const TERMINAL_CONSTANTS = {
+  SCROLL_DELAY_MS: 50,
+  WINDOW_SCROLL_DELAY_MS: 100,
+  TYPING_CHAR_DELAY_MS: 50,
+  TYPING_EXECUTION_DELAY_MS: 200,
+  SUGGESTION_DISPLAY_DURATION_MS: 2000,
+  TOAST_DURATION_MS: 2500,
+  MOBILE_BREAKPOINT_PX: 768,
+} as const;
+
 // ASCII art (moved to constants/ascii.ts)
 // Terminal component
 const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
@@ -205,60 +216,40 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     setGhostSuggestion('');
   }, [currentPath, fileSystem, addToHistory]);
 
-  // Auto-scroll functionality
-  useEffect(() => {
-    if (!isInitialLoad && terminalRef.current) {
+  // Auto-scroll functionality - consolidated helper
+  const scrollToBottom = useCallback(() => {
+    if (terminalRef.current) {
       setTimeout(() => {
         terminalRef.current!.scrollTop = terminalRef.current!.scrollHeight;
-      }, 50);
+      }, TERMINAL_CONSTANTS.SCROLL_DELAY_MS);
     }
     
     // Also scroll window to bottom as fallback
-    if (!isInitialLoad) {
-      setTimeout(() => {
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: 'smooth'
-        });
-      }, 100);
-    }
-  }, [currentPath, isInitialLoad]);
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, TERMINAL_CONSTANTS.WINDOW_SCROLL_DELAY_MS);
+  }, []);
 
   useEffect(() => {
-    if (!isInitialLoad && terminalRef.current) {
-      setTimeout(() => {
-        terminalRef.current!.scrollTop = terminalRef.current!.scrollHeight;
-      }, 50);
-    }
-    
-    // Also scroll window to bottom as fallback
     if (!isInitialLoad) {
-      setTimeout(() => {
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: 'smooth'
-        });
-      }, 100);
+      scrollToBottom();
     }
-  }, [suggestions, isInitialLoad]);
+  }, [currentPath, isInitialLoad, scrollToBottom]);
 
   useEffect(() => {
-    if (!isInitialLoad && terminalRef.current) {
-      setTimeout(() => {
-        terminalRef.current!.scrollTop = terminalRef.current!.scrollHeight;
-      }, 50);
-    }
-    
-    // Also scroll window to bottom as fallback
     if (!isInitialLoad) {
-      setTimeout(() => {
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: 'smooth'
-        });
-      }, 100);
+      scrollToBottom();
     }
-  }, [lines, isInitialLoad]);
+  }, [suggestions, isInitialLoad, scrollToBottom]);
+
+  useEffect(() => {
+    if (!isInitialLoad) {
+      scrollToBottom();
+    }
+  }, [lines, isInitialLoad, scrollToBottom]);
 
   // Initial welcome message
   useEffect(() => {
@@ -276,7 +267,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     window.scrollTo(0, 0);
 
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= TERMINAL_CONSTANTS.MOBILE_BREAKPOINT_PX);
     };
     
     checkMobile();
@@ -307,11 +298,11 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     // Type character by character
     for (let i = 0; i <= command.length; i++) {
       setCurrentInput(command.substring(0, i));
-      await new Promise(resolve => setTimeout(resolve, 50));
+      await new Promise(resolve => setTimeout(resolve, TERMINAL_CONSTANTS.TYPING_CHAR_DELAY_MS));
     }
     
     // Wait a moment before executing
-    await new Promise(resolve => setTimeout(resolve, 200));
+    await new Promise(resolve => setTimeout(resolve, TERMINAL_CONSTANTS.TYPING_EXECUTION_DELAY_MS));
     
     // Execute the command
     executeCommand(command);

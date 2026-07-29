@@ -16,9 +16,10 @@ const Navbar: React.FC = () => {
       <div className="px-4 py-3">
         <div className="flex flex-row items-start justify-between space-y-0">
           {/* Logo/Title */}
-          <div className="flex items-start space-x-2">
-            <a href="/" className="text-green-400 font-mono text-lg font-bold hover:text-green-300 transition-colors">
-              &gt;_ronnakrit.net
+          <div className="flex items-center space-x-2">
+            <a href="/" className="flex items-center space-x-2 text-green-400 font-mono text-lg font-bold hover:text-green-300 transition-colors">
+              <img src="/icon.svg" alt="R" className="w-7 h-7" />
+              <span>ronnakrit.net</span>
             </a>
           </div>
 

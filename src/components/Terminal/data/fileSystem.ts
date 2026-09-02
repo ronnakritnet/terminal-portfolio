@@ -54,8 +54,8 @@ TECHNOLOGIES:
     content: `
 PROFILE: RONNAKRIT WANANUKAN
 
-I am a 3rd-year Computer Engineering student at Rajamangala University 
-of Technology Phra Nakhon. My journey started with a High Vocational 
+I am a Computer Engineering student at Rajamangala University of 
+Technology Phra Nakhon. My journey started with a High Vocational 
 Diploma in Information Technology, and now I'm bridging the gap 
 between systems infrastructure and software through network automation.
 

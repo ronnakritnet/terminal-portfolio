@@ -139,10 +139,11 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
       case 'clear':
         setLines([]);
         setShowBanner(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         break;
 
       case 'ls':
-        output = handleLsCommand(currentPath, fileSystem);
+        output = handleLsCommand(args, currentPath, fileSystem);
         break;
 
       case 'cd':
@@ -218,19 +219,13 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
 
   // Auto-scroll functionality - consolidated helper
   const scrollToBottom = useCallback(() => {
-    if (terminalRef.current) {
-      setTimeout(() => {
-        terminalRef.current!.scrollTop = terminalRef.current!.scrollHeight;
-      }, TERMINAL_CONSTANTS.SCROLL_DELAY_MS);
-    }
-    
-    // Also scroll window to bottom as fallback
     setTimeout(() => {
+      inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: 'smooth'
       });
-    }, TERMINAL_CONSTANTS.WINDOW_SCROLL_DELAY_MS);
+    }, TERMINAL_CONSTANTS.SCROLL_DELAY_MS);
   }, []);
 
   useEffect(() => {
@@ -251,30 +246,19 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     }
   }, [lines, isInitialLoad, scrollToBottom]);
 
-  // Initial welcome message
+  // Initial mount setup
   useEffect(() => {
-    const welcomeMessage: TerminalLine = {
-      id: Date.now().toString(),
-      type: 'output',
-      content: isMobile ? '' : '' // Will be handled by ASCIIBanner component
-    };
-    setLines([welcomeMessage]);
-
-    // Scroll to top on initial load
-    if (terminalRef.current) {
-      terminalRef.current.scrollTop = 0;
-    }
     window.scrollTo(0, 0);
 
-    const checkMobile = () => {
+    const checkMobileHandler = () => {
       setIsMobile(window.innerWidth <= TERMINAL_CONSTANTS.MOBILE_BREAKPOINT_PX);
     };
     
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
+    checkMobileHandler();
+    window.addEventListener('resize', checkMobileHandler);
     
-    return () => window.removeEventListener('resize', checkMobile);
-  }, [isMobile]);
+    return () => window.removeEventListener('resize', checkMobileHandler);
+  }, [setIsMobile]);
 
   // Handle external command
   useEffect(() => {
@@ -337,8 +321,15 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     handleInputChange(e, currentPath, fileSystem, setCurrentInput, setGhostSuggestion);
   };
 
+  const handleTerminalClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName.toLowerCase() === 'a') return;
+    if (window.getSelection()?.toString()) return;
+    inputRef.current?.focus();
+  };
+
   return (
-    <div className="flex-1 bg-black text-green-400 font-mono flex flex-col border-t border-gray-800">
+    <div className="flex-1 bg-black text-green-400 font-mono flex flex-col">
       {/* Executing Toast Notification */}
       {toast && (
         <div 
@@ -354,12 +345,13 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
       )}
 
       {/* Terminal Container */}
-      <div className="flex-1 flex px-4 py-6 pt-20 overflow-y-auto">
+      <div className="flex-1 flex px-4 py-6 pt-20 pb-16">
         <div className="w-full max-w-5xl mx-auto">
           {/* Terminal Content */}
           <div 
             ref={terminalRef}
-            className="px-6 py-4 mb-12 md:mb-0 border border-green-600 bg-gray-900/50 rounded-lg shadow-lg"
+            onClick={handleTerminalClick}
+            className="px-6 py-4 mb-8 md:mb-4 border border-green-600 bg-gray-900/50 rounded-lg shadow-lg cursor-text"
           >
             {/* ASCII Banner - First element in terminal */}
             {showBanner && <ASCIIBanner isMobile={isMobile} />}

@@ -10,12 +10,17 @@ export const handleWhoisCommand = (args: string[]): string => {
     return COMMAND_RESPONSES.whois.missingArgs;
   }
   
-  const domain = args[0];
+  const rawDomain = args[0];
+  if (rawDomain === '--help' || rawDomain === '-h') {
+    return COMMAND_RESPONSES.whois.missingArgs;
+  }
+
+  const domain = rawDomain.toLowerCase().trim().replace(/^https?:\/\//, '').replace(/\/+$/, '');
   if (domain === 'ronnakrit' || domain === 'ronnakrit.net') {
     return COMMAND_RESPONSES.whois.ronnakrit;
   }
   
-  return COMMAND_RESPONSES.whois.notFound(domain);
+  return COMMAND_RESPONSES.whois.notFound(rawDomain);
 };
 
 export const handleSudoCommand = (args: string[]): string => {
@@ -33,6 +38,15 @@ export const handleCatCommand = (args: string[], currentPathArray: PathArray, fi
   }
   
   const filename = args[0];
+  if (filename === '--help' || filename === '-h') {
+    return `Usage: cat [FILE]...
+Concatenate FILE(s) to standard output.
+
+Examples:
+  cat about.md                  Output the contents of about.md
+  cat projects/ronnakrit-net.md Output project details`;
+  }
+
   const result = getFileContent(filename, currentPathArray, fileSystem);
   
   if (!result.success) {
@@ -42,8 +56,14 @@ export const handleCatCommand = (args: string[], currentPathArray: PathArray, fi
   return result.data || '';
 };
 
-export const handleLsCommand = (currentPathArray: PathArray, fileSystem: FileSystem): string => {
-  const result = listDirectory('', currentPathArray, fileSystem);
+export const handleLsCommand = (args: string[], currentPathArray: PathArray, fileSystem: FileSystem): string => {
+  const target = args[0] || '';
+  if (target === '--help' || target === '-h') {
+    return `Usage: ls [DIRECTORY]...
+List information about the directory contents.`;
+  }
+
+  const result = listDirectory(target, currentPathArray, fileSystem);
   
   if (!result.success) {
     return result.error || 'ls: unknown error';

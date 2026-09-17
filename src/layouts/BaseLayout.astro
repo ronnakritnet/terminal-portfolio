@@ -1,0 +1,95 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  canonicalPath?: string;
+  image?: string;
+}
+
+const {
+  title = "RonnakritNet | Computer Engineering & Network Automation Portfolio",
+  description = "Official portfolio of Ronnakrit Wananukan. A Computer Engineering student passionate about Network Engineering, Automation, and Linux. Currently preparing for the CCNA certification.",
+  keywords = "Ronnakrit, Computer Engineering, Network Engineer, Portfolio, CLI, Terminal, Network Automation, Python, Cisco, MikroTik, CCNA, Linux, รณกฤต วนานุกัณฑ์, รณกฤต, รณกฤต วนานุกัณฑ์ พอร์ตโฟลิโอ",
+  canonicalPath = "",
+  image = "https://ronnakrit.net/og-preview.png"
+} = Astro.props;
+
+const siteUrl = "https://ronnakrit.net";
+const fullCanonicalUrl = canonicalPath ? `${siteUrl}${canonicalPath.startsWith('/') ? canonicalPath : `/${canonicalPath}`}` : siteUrl;
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Ronnakrit Wananukan",
+  "alternateName": "รณกฤต วนานุกัณฑ์",
+  "jobTitle": "Computer Engineering Student",
+  "description": description,
+  "url": "https://ronnakrit.net",
+  "email": "contact@ronnakrit.net",
+  "knowsAbout": [
+    "Network Engineering",
+    "Computer Engineering",
+    "Python",
+    "Cisco",
+    "MikroTik",
+    "Linux",
+    "System Administration",
+    "Network Security",
+    "CCNA",
+    "Network Automation"
+  ],
+  "sameAs": [
+    "https://github.com/ronnakritnet",
+    "https://linkedin.com/in/ronnakritnet"
+  ]
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content="Ronnakrit Wananukan (รณกฤต วนานุกัณฑ์)" />
+    <link rel="canonical" href={fullCanonicalUrl} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={fullCanonicalUrl} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:site_name" content="RonnakritNet" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="twitter:image:alt" content={title} />
+
+    <!-- Professional Profiles -->
+    <meta property="linkedin:owner" content="ronnakrit" />
+    <meta property="linkedin:company" content="ronnakrit.net" />
+
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="theme-color" content="#0D0D0D" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+  </head>
+  <body class="bg-black text-green-400 font-mono min-h-screen flex flex-col">
+    <slot />
+  </body>
+</html>

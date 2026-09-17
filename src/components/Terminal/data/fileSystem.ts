@@ -1,53 +1,49 @@
-import type { FileSystem } from '../types';
+import type { FileSystem, FileSystemNode } from '../types';
+import { PROJECTS_DATA, CERTS_DATA } from '../../../data/portfolio';
+
+// Generate project files dynamically from single source of truth
+const projectsChildren: Record<string, FileSystemNode> = {};
+for (const p of PROJECTS_DATA) {
+  projectsChildren[p.filename] = {
+    type: 'file',
+    content: `
+PROJECT: ${p.title}
+
+${p.description}
+
+FEATURES:
+${p.features.map(f => `- ${f}`).join('\n')}
+
+TECHNOLOGIES:
+${p.technologies.map(t => `- ${t.label.padEnd(16)}: ${t.value}`).join('\n')}
+`
+  };
+}
+
+// Generate certification files dynamically from single source of truth
+const certsChildren: Record<string, FileSystemNode> = {};
+for (const c of CERTS_DATA) {
+  certsChildren[c.filename] = {
+    type: 'file',
+    content: `
+CERTIFICATION: ${c.title}
+
+Issuer       : ${c.issuer}
+Status       : ${c.status}
+Credential   : ${c.credentialUrl}
+Core Focus   : ${c.coreFocus}
+
+KEY KNOWLEDGE AREAS:
+${c.keyKnowledgeAreas.map(k => `- ${k}`).join('\n')}
+`
+  };
+}
 
 // File system data
 export const fileSystem: FileSystem = {
-'projects': {
+  projects: {
     type: 'directory',
-    children: {
-      'ronnakrit-net.md': {
-        type: 'file',
-        content: `
-PROJECT: RONNAKRIT.NET
-
-An interactive personal portfolio featuring a functional terminal 
-interface, tailored for a Network Automation & Engineering persona.
-
-FEATURES:
-- Interactive Command Line Experience
-- Basic File System Navigation (Beta / Under Development)
-- High-Performance Optimization (100% PageSpeed Insights Score)
-- Production Deployment via GitHub Pages & Cloudflare
-
-TECHNOLOGIES:
-- Framework       : Astro, React
-- Language        : TypeScript
-- Styling         : Tailwind CSS
-- Tooling & Infr  : Cloudflare, Git, Windsurf AI
-`
-      },
-      'schedule-management-system.md': {
-        type: 'file',
-        content: `
-PROJECT: ACADEMIC SCHEDULE MANAGER
-
-A web-based system designed to manage and visualize academic schedules 
-across three different dimensions: Students, Teachers, and Classrooms.
-
-FEATURES:
-- Triple-View Scheduling Interface (Student, Teacher, Room)
-- Conflict-Free Session Management (Automated Schedule Collision Check)
-- Real-Time Dynamic Visualization for Classroom Usage
-- Developed with AI-Assisted Engineering Workflow
-
-TECHNOLOGIES:
-- Backend       : PHP
-- Database      : MySQL (phpMyAdmin)
-- Environment   : XAMPP Localhost Stack (Academic Sandbox)
-- Tooling       : Claude AI, Git
-`
-      }
-    }
+    children: projectsChildren
   },
   'about.md': {
     type: 'file',
@@ -132,45 +128,8 @@ PHASE 2: FINAL YEAR & PROFESSIONAL (2027)
   [ ] Graduate in Computer Engineering (RMUTP)
 `
   },
-  'certs': {
+  certs: {
     type: 'directory',
-    children: {
-      'google_it_support.md': {
-        type: 'file',
-        content: `
-CERTIFICATION: GOOGLE IT SUPPORT PROFESSIONAL
-
-Issuer       : Google (via Coursera)
-Status       : Completed & Verified
-Credential   : https://coursera.org/share/6ee83fcc650e37c3d8cd35c73961b3e3
-Core Focus   : IT Foundations & Infrastructure Support
-
-KEY KNOWLEDGE AREAS (Based on 5 Completed Courses):
-- Computer Networking (The Bits and Bytes of Network Protocols)
-- Operating Systems (Becoming a Windows & Linux Power User)
-- System Administration & IT Infrastructure Services
-- IT Security (Defense Against the Digital Dark Arts)
-- Technical Support Fundamentals & Infrastructure Troubleshooting
-`
-      },
-      'google_cybersecurity.md': {
-        type: 'file',
-        content: `
-CERTIFICATION: GOOGLE CYBERSECURITY PROFESSIONAL
-
-Issuer       : Google (via Coursera)
-Status       : Completed & Verified
-Credential   : https://coursera.org/share/707bec8c1e18e2be9c0a735b262b32d3
-Core Focus   : Security Operations & Infrastructure Defense
-
-KEY KNOWLEDGE AREAS (Based on 9 Completed Courses):
-- Networks and Network Security (Connect & Protect Frameworks)
-- Tools of the Trade (Linux CLI & SQL Data Querying)
-- Automate Cybersecurity Tasks (Python Scripting Fundamentals)
-- Threat & Vulnerability Management (Assets & Risk Mitigation)
-- Detection and Response (Sound the Alarm / Incident Mitigation)
-`
-      }
-    }
+    children: certsChildren
   }
 };

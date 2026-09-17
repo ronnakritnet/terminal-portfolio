@@ -5,18 +5,11 @@ import Footer from './Footer';
 import FAB from './FAB';
 
 const App: React.FC = () => {
-  const [externalCommand, setExternalCommand] = useState<string>('');
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  const handleCommandExecute = (command: string) => {
-    setExternalCommand(command);
-    // Clear command after a short delay to prevent re-execution
-    setTimeout(() => setExternalCommand(''), 100);
-  };
 
   if (!isMounted) {
     return (
@@ -31,9 +24,9 @@ const App: React.FC = () => {
   return (
     <div className="h-[100dvh] bg-black flex flex-col">
       <Navbar />
-      <main className="flex-1">
-        <Terminal externalCommand={externalCommand} />
-      </main>
+      <div className="flex-1 flex flex-col min-h-0">
+        <Terminal />
+      </div>
       <Footer />
       <FAB />
     </div>

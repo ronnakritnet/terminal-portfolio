@@ -185,9 +185,9 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
               break;
             }
             
-            // Auto-append .md if not present and execute as cat command
+            // Auto-append .md if not present and execute as cat command resolved from root
             const fullPath = mainCommand.endsWith('.md') ? mainCommand : mainCommand + '.md';
-            const catResult = handleCatCommand([fullPath], currentPath, fileSystem);
+            const catResult = handleCatCommand([fullPath], [], fileSystem);
             output = catResult;
             handled = true;
             break;
@@ -424,15 +424,16 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
                   data-ghost-suggestion={ghostSuggestion}
                 />
                 {/* Ghost Suggestion */}
-                {ghostSuggestion && (
+                {ghostSuggestion && ghostSuggestion.toLowerCase().startsWith(currentInput.toLowerCase()) && (
                   <span 
-                    className="absolute left-0 top-0 pointer-events-none text-gray-500"
+                    className="absolute left-0 top-0 pointer-events-none text-gray-500 font-mono"
                     style={{ 
                       color: 'var(--terminal-gray)',
                       opacity: 0.5
                     }}
                   >
-                    {ghostSuggestion}
+                    <span className="invisible select-none">{currentInput}</span>
+                    <span>{ghostSuggestion.slice(currentInput.length)}</span>
                   </span>
                 )}
               </div>

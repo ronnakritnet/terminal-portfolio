@@ -82,6 +82,8 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const [isTyping, setIsTyping] = useState(false);
+  const isTypingRef = useRef(false);
+  const lastExecutedHashRef = useRef<string>('');
 
   // Command execution logic
   const executeCommand = useCallback((command: string) => {
@@ -110,8 +112,10 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     // Update URL hash for deep linking (without page refresh)
     if (typeof window !== 'undefined') {
       if ((VALID_HASH_COMMANDS as readonly string[]).includes(mainCommand)) {
+        lastExecutedHashRef.current = mainCommand;
         window.history.replaceState(null, '', `#${mainCommand}`);
       } else if (mainCommand === 'clear') {
+        lastExecutedHashRef.current = '';
         window.history.replaceState(null, '', window.location.pathname);
       }
     }
@@ -298,8 +302,9 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
 
   // Typing simulation for external command execution
   const simulateTyping = useCallback(async (command: string) => {
-    if (isTyping) return;
+    if (isTypingRef.current) return;
     
+    isTypingRef.current = true;
     setIsTyping(true);
     setCurrentInput('');
     
@@ -308,42 +313,56 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
       inputRef.current.focus();
     }
     
-    // Type character by character
-    for (let i = 0; i <= command.length; i++) {
-      setCurrentInput(command.substring(0, i));
-      await new Promise(resolve => setTimeout(resolve, TERMINAL_CONSTANTS.TYPING_CHAR_DELAY_MS));
+    try {
+      // Type character by character
+      for (let i = 0; i <= command.length; i++) {
+        setCurrentInput(command.substring(0, i));
+        await new Promise(resolve => setTimeout(resolve, TERMINAL_CONSTANTS.TYPING_CHAR_DELAY_MS));
+      }
+      
+      // Wait a moment before executing
+      await new Promise(resolve => setTimeout(resolve, TERMINAL_CONSTANTS.TYPING_EXECUTION_DELAY_MS));
+      
+      // Execute the command
+      executeCommand(command);
+    } finally {
+      setCurrentInput('');
+      isTypingRef.current = false;
+      setIsTyping(false);
     }
-    
-    // Wait a moment before executing
-    await new Promise(resolve => setTimeout(resolve, TERMINAL_CONSTANTS.TYPING_EXECUTION_DELAY_MS));
-    
-    // Execute the command
-    executeCommand(command);
-    setCurrentInput('');
-    setIsTyping(false);
-  }, [isTyping, executeCommand]);
+  }, [executeCommand]);
+
+  // Keep ref to latest simulateTyping to avoid effect re-triggers
+  const simulateTypingRef = useRef(simulateTyping);
+  useEffect(() => {
+    simulateTypingRef.current = simulateTyping;
+  }, [simulateTyping]);
 
   // Register command executor callback
   useEffect(() => {
     registerCommandExecutor(simulateTyping);
   }, [simulateTyping]);
 
-  // Deep link support: auto-execute command from URL hash (e.g., ronnakrit.net/#projects)
+  // Deep link support: auto-execute command on initial mount if hash is present, or on real hashchange
   useEffect(() => {
     const handleHashCommand = () => {
       const hash = window.location.hash.replace('#', '').trim().toLowerCase();
       if (!hash) return;
+      // Do not re-execute if already processed
+      if (hash === lastExecutedHashRef.current) return;
+      
       if ((VALID_HASH_COMMANDS as readonly string[]).includes(hash)) {
+        lastExecutedHashRef.current = hash;
         setTimeout(() => {
-          simulateTyping(hash);
-        }, 300);
+          simulateTypingRef.current(hash);
+        }, 200);
       }
     };
 
     handleHashCommand();
     window.addEventListener('hashchange', handleHashCommand);
     return () => window.removeEventListener('hashchange', handleHashCommand);
-  }, [simulateTyping]);
+  }, []);
 
   // Input handling using modular keyboard handler
   const handleInput = (e: React.KeyboardEvent<HTMLInputElement>) => {

@@ -115,7 +115,15 @@ export const getFileContent = (
     };
   }
 
-  const result = resolvePath(inputPath, currentPathArray, fileSystem);
+  let result = resolvePath(inputPath, currentPathArray, fileSystem);
+  
+  // If not found and doesn't end with .md, try auto-appending .md
+  if (!result.success && !inputPath.endsWith('.md')) {
+    const mdResult = resolvePath(`${inputPath}.md`, currentPathArray, fileSystem);
+    if (mdResult.success) {
+      result = mdResult;
+    }
+  }
   
   if (!result.success || !result.data) {
     return {

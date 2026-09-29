@@ -8,6 +8,7 @@ import { getDirectories, getFiles, resolvePathCompletions } from './fileSystemUt
  * @returns Array of matching command names
  */
 export const getCommandCompletions = (input: string): string[] => {
+  if (!input || !input.trim()) return [];
   const availableCommands = Object.keys(COMMANDS_DESC);
   const lowerInput = input.toLowerCase();
   
@@ -153,6 +154,7 @@ export const getFirstContextualMatch = (
   currentPathArray: PathArray,
   fileSystem: FileSystem
 ): string => {
+  if (!input || !input.trim()) return '';
   const completions = getContextualCompletions(input, currentPathArray, fileSystem);
   return completions[0] || '';
 };

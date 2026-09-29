@@ -120,15 +120,14 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
       }
     }
 
+    const baseId = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
     const newLine: TerminalLine = {
-      id: Date.now().toString(),
+      id: `${baseId}-in`,
       type: 'input',
       content: trimmedCommand,
       command: mainCommand,
       path: executionPath
     };
-
-    setLines(prev => [...prev, newLine]);
 
     let output = '';
 
@@ -234,13 +233,16 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
         break;
     }
 
-    if (output) {
-      const outputLine: TerminalLine = {
-        id: (Date.now() + 1).toString(),
-        type: 'output',
-        content: output
-      };
-      setLines(prev => [...prev, outputLine]);
+    if (mainCommand !== 'clear') {
+      const newLines: TerminalLine[] = [newLine];
+      if (output) {
+        newLines.push({
+          id: `${baseId}-out`,
+          type: 'output',
+          content: output
+        });
+      }
+      setLines(prev => [...prev, ...newLines]);
     }
 
     // Add to command history
@@ -345,6 +347,8 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
 
   // Deep link support: auto-execute command on initial mount if hash is present, or on real hashchange
   useEffect(() => {
+    let timerId: number | null = null;
+
     const handleHashCommand = () => {
       const hash = window.location.hash.replace('#', '').trim().toLowerCase();
       if (!hash) return;
@@ -353,7 +357,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
       
       if ((VALID_HASH_COMMANDS as readonly string[]).includes(hash)) {
         lastExecutedHashRef.current = hash;
-        setTimeout(() => {
+        timerId = window.setTimeout(() => {
           simulateTypingRef.current(hash);
         }, 200);
       }
@@ -361,7 +365,10 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
 
     handleHashCommand();
     window.addEventListener('hashchange', handleHashCommand);
-    return () => window.removeEventListener('hashchange', handleHashCommand);
+    return () => {
+      if (timerId) window.clearTimeout(timerId);
+      window.removeEventListener('hashchange', handleHashCommand);
+    };
   }, []);
 
   // Input handling using modular keyboard handler
@@ -446,7 +453,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
                     {line.type === 'input' && (
                       <div className="flex items-center">
                         <span style={{ color: 'var(--terminal-green)' }}>
-                          ronnakrit@portfolio
+                          <span className="hidden sm:inline">ronnakrit@</span>portfolio
                         </span>
                         <span className="mx-1 text-white">:</span>
                         <span style={{ color: 'var(--terminal-blue)' }}>
@@ -477,6 +484,21 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
                 );
               })}
 
+              {/* Tab Suggestions Display */}
+              {suggestions.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 my-2 p-1.5 bg-gray-800/70 rounded border border-gray-700/60 text-xs font-mono">
+                  <span className="text-gray-400 select-none mr-1">Matches:</span>
+                  {suggestions.map((item, idx) => (
+                    <span 
+                      key={idx} 
+                      className="px-1.5 py-0.5 bg-gray-900/90 text-green-300 rounded border border-green-800/40 text-[11px]"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              )}
+
               {/* Quick Command Action Chips (For non-CLI visitors) */}
               <div className="flex flex-wrap items-center gap-1.5 pt-3 pb-2 mb-3 border-t border-gray-800/80">
                 <span className="text-xs text-gray-400 font-mono flex items-center mr-1 select-none">
@@ -504,7 +526,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
               {/* Current Input Line - Inside Terminal Container */}
               <div className="flex items-center">
                 <span style={{ color: 'var(--terminal-green)' }}>
-                  ronnakrit@portfolio
+                  <span className="hidden sm:inline">ronnakrit@</span>portfolio
                 </span>
                 <span className="mx-1 text-white">:</span>
                 <span style={{ color: 'var(--terminal-blue)' }}>
@@ -518,13 +540,17 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
                     value={currentInput}
                     onChange={handleInputChangeHandler}
                     onKeyDown={handleInput}
+                    autoCapitalize="none"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    spellCheck={false}
                     className="w-full bg-transparent outline-none text-white"
                     style={{ color: 'var(--terminal-white)' }}
                     placeholder={currentInput.length === 0 ? "Type a command..." : ""}
                     data-ghost-suggestion={ghostSuggestion}
                   />
                   {/* Ghost Suggestion */}
-                  {ghostSuggestion && ghostSuggestion.toLowerCase().startsWith(currentInput.toLowerCase()) && (
+                  {currentInput.length > 0 && ghostSuggestion && ghostSuggestion.toLowerCase().startsWith(currentInput.toLowerCase()) && (
                     <span 
                       className="absolute left-0 top-0 pointer-events-none text-gray-500 font-mono"
                       style={{ 

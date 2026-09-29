@@ -157,15 +157,25 @@ export const handleKeyDown = (
     e.preventDefault();
     handleTabCompletion(currentInput, currentPathArray, fileSystem, setCurrentInput, setSuggestions, setGhostSuggestion);
   } else if (e.key === 'ArrowRight') {
-    e.preventDefault();
-    // Accept ghost suggestion with right arrow
-    acceptGhostSuggestion(ghostSuggestion, setCurrentInput, setGhostSuggestion);
+    if (ghostSuggestion) {
+      e.preventDefault();
+      // Accept ghost suggestion with right arrow
+      acceptGhostSuggestion(ghostSuggestion, setCurrentInput, setGhostSuggestion);
+    }
+    // If no ghost suggestion, allow default browser cursor movement
   } else if (e.key === 'ArrowUp') {
     e.preventDefault();
     handleHistoryNavigation('up', commandHistory, historyIndex, setHistoryIndex, setCurrentInput, setGhostSuggestion);
   } else if (e.key === 'ArrowDown') {
     e.preventDefault();
     handleHistoryNavigation('down', commandHistory, historyIndex, setHistoryIndex, setCurrentInput, setGhostSuggestion);
+  } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'l') {
+    e.preventDefault();
+    executeCommand('clear');
+  } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c' && !window.getSelection()?.toString()) {
+    e.preventDefault();
+    setCurrentInput('');
+    setGhostSuggestion('');
   }
 };
 

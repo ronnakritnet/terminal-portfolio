@@ -113,13 +113,14 @@ const generateTree = (
     // If directory, recursively add children
     if (obj?.type === 'directory' && obj.children) {
       const children = Object.keys(obj.children);
+      const sortedChildren = sortItems(children, obj.children as FileSystem);
       // Build the new prefix for children
       const newParentPrefixes = [...parentPrefixes, !isLastItem];
       const newPrefix = newParentPrefixes
         .map(shouldContinue => shouldContinue ? '│   ' : '    ')
         .join('');
       
-      result += generateTree(children, obj.children, newPrefix, newParentPrefixes);
+      result += generateTree(sortedChildren, obj.children as FileSystem, newPrefix, newParentPrefixes);
     }
   });
   

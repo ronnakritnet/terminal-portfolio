@@ -9,10 +9,10 @@ const Footer: React.FC = () => {
   }, []);
 
   return (
-    <footer className="hidden md:block bg-gray-900 border-t border-gray-700 px-4 py-3">
+    <footer className="bg-gray-900/90 border-t border-gray-800 px-4 py-3">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0 md:space-x-4">
-          <div className="text-gray-400 text-sm">
+        <div className="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0 md:space-x-4 text-xs md:text-sm">
+          <div className="text-gray-400 text-center md:text-left">
             © {currentYear} Ronnakrit Wananukan. All rights reserved.
           </div>
           <div className="flex space-x-4">

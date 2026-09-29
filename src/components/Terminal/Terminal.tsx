@@ -28,6 +28,26 @@ const TERMINAL_CONSTANTS = {
   MOBILE_BREAKPOINT_PX: 768,
 } as const;
 
+const QUICK_COMMANDS = [
+  'about',
+  'projects',
+  'skills',
+  'certs',
+  'roadmap',
+  'contact',
+  'clear'
+] as const;
+
+const VALID_HASH_COMMANDS = [
+  'about',
+  'projects',
+  'skills',
+  'certs',
+  'roadmap',
+  'contact',
+  'help'
+] as const;
+
 // ASCII art (moved to constants/ascii.ts)
 // Terminal component
 const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
@@ -86,6 +106,15 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
 
     // Capture current path for this execution
     const executionPath = pathArrayToString(currentPath);
+
+    // Update URL hash for deep linking (without page refresh)
+    if (typeof window !== 'undefined') {
+      if ((VALID_HASH_COMMANDS as readonly string[]).includes(mainCommand)) {
+        window.history.replaceState(null, '', `#${mainCommand}`);
+      } else if (mainCommand === 'clear') {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    }
 
     const newLine: TerminalLine = {
       id: Date.now().toString(),
@@ -299,6 +328,23 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     registerCommandExecutor(simulateTyping);
   }, [simulateTyping]);
 
+  // Deep link support: auto-execute command from URL hash (e.g., ronnakrit.net/#projects)
+  useEffect(() => {
+    const handleHashCommand = () => {
+      const hash = window.location.hash.replace('#', '').trim().toLowerCase();
+      if (!hash) return;
+      if ((VALID_HASH_COMMANDS as readonly string[]).includes(hash)) {
+        setTimeout(() => {
+          simulateTyping(hash);
+        }, 300);
+      }
+    };
+
+    handleHashCommand();
+    window.addEventListener('hashchange', handleHashCommand);
+    return () => window.removeEventListener('hashchange', handleHashCommand);
+  }, [simulateTyping]);
+
   // Input handling using modular keyboard handler
   const handleInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
     handleKeyDown(
@@ -345,89 +391,133 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
       )}
 
       {/* Terminal Container */}
-      <div className="flex-1 flex px-4 py-6 pt-20 pb-16">
+      <div className="flex-1 flex px-3 sm:px-4 py-6 pt-20 pb-16">
         <div className="w-full max-w-5xl mx-auto">
-          {/* Terminal Content */}
+          {/* Terminal Window Card */}
           <div 
             ref={terminalRef}
             onClick={handleTerminalClick}
-            className="px-6 py-4 mb-8 md:mb-4 border border-green-600 bg-gray-900/50 rounded-lg shadow-lg cursor-text"
+            className="border border-green-600/70 bg-gray-900/60 rounded-lg shadow-2xl shadow-green-950/20 overflow-hidden cursor-text mb-8 md:mb-4"
           >
-            {/* ASCII Banner - First element in terminal */}
-            {showBanner && <ASCIIBanner isMobile={isMobile} />}
-            
-            {lines.map((line) => {
-              return (
-                <div key={line.id} className="mb-2">
-                  {line.type === 'input' && (
-                    <div className="flex items-center">
-                      <span style={{ color: 'var(--terminal-green)' }}>
-                        ronnakrit@portfolio
-                      </span>
-                      <span className="mx-1 text-white">:</span>
-                      <span style={{ color: 'var(--terminal-blue)' }}>
-                        {line.path || '~'}
-                      </span>
-                      <span className="mx-1 text-white">$</span>
-                      <span className="ml-2 text-white">{line.content}</span>
-                    </div>
-                  )}
-                  {line.type === 'output' && (
-                    <pre 
-                      className="whitespace-pre-wrap text-sm"
-                      style={{ color: 'var(--terminal-light-green)' }}
-                      dangerouslySetInnerHTML={{
-                        __html: renderTerminalContent(line.content)
+            {/* Terminal Window Titlebar */}
+            <div className="bg-gray-800/80 px-4 py-2.5 border-b border-gray-700/80 flex items-center justify-between select-none">
+              <div className="flex items-center space-x-2">
+                <span className="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+                <span className="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+                <span className="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+              </div>
+              <div className="text-xs font-mono text-gray-300 flex items-center space-x-1.5">
+                <span className="text-green-400">ronnakrit@portfolio</span>
+                <span className="text-gray-500">:</span>
+                <span className="text-blue-400">{pathArrayToString(currentPath)}</span>
+              </div>
+              <div className="text-[11px] font-mono text-gray-400 hidden sm:block">
+                bash 5.2
+              </div>
+            </div>
+
+            {/* Terminal Content Body */}
+            <div className="p-4 sm:p-6">
+              {/* ASCII Banner - First element in terminal */}
+              {showBanner && <ASCIIBanner isMobile={isMobile} />}
+              
+              {lines.map((line) => {
+                return (
+                  <div key={line.id} className="mb-2">
+                    {line.type === 'input' && (
+                      <div className="flex items-center">
+                        <span style={{ color: 'var(--terminal-green)' }}>
+                          ronnakrit@portfolio
+                        </span>
+                        <span className="mx-1 text-white">:</span>
+                        <span style={{ color: 'var(--terminal-blue)' }}>
+                          {line.path || '~'}
+                        </span>
+                        <span className="mx-1 text-white">$</span>
+                        <span className="ml-2 text-white">{line.content}</span>
+                      </div>
+                    )}
+                    {line.type === 'output' && (
+                      <pre 
+                        className="whitespace-pre-wrap text-sm"
+                        style={{ color: 'var(--terminal-light-green)' }}
+                        dangerouslySetInnerHTML={{
+                          __html: renderTerminalContent(line.content)
+                        }}
+                      />
+                    )}
+                    {line.type === 'error' && (
+                      <pre 
+                        className="whitespace-pre-wrap text-sm"
+                        style={{ color: '#ff6b6b' }}
+                      >
+                        {renderTerminalContent(line.content)}
+                      </pre>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Quick Command Action Chips (For non-CLI visitors) */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-3 pb-2 mb-3 border-t border-gray-800/80">
+                <span className="text-xs text-gray-400 font-mono flex items-center mr-1 select-none">
+                  <span className="text-green-400 mr-1">⚡</span>
+                  <span className="hidden sm:inline">Quick:</span>
+                </span>
+                {QUICK_COMMANDS.map((cmd) => (
+                  <button
+                    key={cmd}
+                    type="button"
+                    disabled={isTyping}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      simulateTyping(cmd);
+                    }}
+                    className="px-2.5 py-1 text-xs font-mono bg-gray-800/80 hover:bg-green-950/60 text-green-400 hover:text-green-300 border border-green-800/70 hover:border-green-400 rounded transition-all duration-150 cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed select-none"
+                    title={`Run command: ${cmd}`}
+                  >
+                    <span className="text-green-600 mr-1 select-none">$</span>
+                    {cmd}
+                  </button>
+                ))}
+              </div>
+              
+              {/* Current Input Line - Inside Terminal Container */}
+              <div className="flex items-center">
+                <span style={{ color: 'var(--terminal-green)' }}>
+                  ronnakrit@portfolio
+                </span>
+                <span className="mx-1 text-white">:</span>
+                <span style={{ color: 'var(--terminal-blue)' }}>
+                  {pathArrayToString(currentPath)}
+                </span>
+                <span className="mx-1 text-white">$</span>
+                <div className="flex-1 relative ml-2 min-w-0">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={currentInput}
+                    onChange={handleInputChangeHandler}
+                    onKeyDown={handleInput}
+                    className="w-full bg-transparent outline-none text-white"
+                    style={{ color: 'var(--terminal-white)' }}
+                    placeholder={currentInput.length === 0 ? "Type a command..." : ""}
+                    data-ghost-suggestion={ghostSuggestion}
+                  />
+                  {/* Ghost Suggestion */}
+                  {ghostSuggestion && ghostSuggestion.toLowerCase().startsWith(currentInput.toLowerCase()) && (
+                    <span 
+                      className="absolute left-0 top-0 pointer-events-none text-gray-500 font-mono"
+                      style={{ 
+                        color: 'var(--terminal-gray)',
+                        opacity: 0.5
                       }}
-                    />
-                  )}
-                  {line.type === 'error' && (
-                    <pre 
-                      className="whitespace-pre-wrap text-sm"
-                      style={{ color: '#ff6b6b' }}
                     >
-                      {renderTerminalContent(line.content)}
-                    </pre>
+                      <span className="invisible select-none">{currentInput}</span>
+                      <span>{ghostSuggestion.slice(currentInput.length)}</span>
+                    </span>
                   )}
                 </div>
-              );
-            })}
-            
-            {/* Current Input Line - Inside Terminal Container */}
-            <div className="flex items-center">
-              <span style={{ color: 'var(--terminal-green)' }}>
-                ronnakrit@portfolio
-              </span>
-              <span className="mx-1 text-white">:</span>
-              <span style={{ color: 'var(--terminal-blue)' }}>
-                {pathArrayToString(currentPath)}
-              </span>
-              <span className="mx-1 text-white">$</span>
-              <div className="flex-1 relative ml-2 min-w-0">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={currentInput}
-                  onChange={handleInputChangeHandler}
-                  onKeyDown={handleInput}
-                  className="w-full bg-transparent outline-none text-white"
-                  style={{ color: 'var(--terminal-white)' }}
-                  placeholder={currentInput.length === 0 ? "Type a command..." : ""}
-                  data-ghost-suggestion={ghostSuggestion}
-                />
-                {/* Ghost Suggestion */}
-                {ghostSuggestion && ghostSuggestion.toLowerCase().startsWith(currentInput.toLowerCase()) && (
-                  <span 
-                    className="absolute left-0 top-0 pointer-events-none text-gray-500 font-mono"
-                    style={{ 
-                      color: 'var(--terminal-gray)',
-                      opacity: 0.5
-                    }}
-                  >
-                    <span className="invisible select-none">{currentInput}</span>
-                    <span>{ghostSuggestion.slice(currentInput.length)}</span>
-                  </span>
-                )}
               </div>
             </div>
           </div>

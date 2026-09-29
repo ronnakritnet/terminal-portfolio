@@ -4,6 +4,8 @@ export interface ProjectItem {
   numberStr: string;
   title: string;
   description: string;
+  liveUrl?: string;
+  repoUrl?: string;
   features: string[];
   technologies: { label: string; value: string }[];
 }
@@ -26,6 +28,8 @@ export const PROJECTS_DATA: ProjectItem[] = [
     numberStr: 'PROJECT 01',
     title: 'RONNAKRIT.NET',
     description: 'An interactive personal portfolio featuring a functional terminal interface, tailored for a Network Automation & Engineering persona.',
+    liveUrl: 'https://ronnakrit.net',
+    repoUrl: 'https://github.com/ronnakritnet/terminal-portfolio',
     features: [
       'Interactive Command Line Experience',
       'Basic File System Navigation (Beta / Under Development)',
@@ -45,6 +49,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     numberStr: 'PROJECT 02',
     title: 'ACADEMIC SCHEDULE MANAGER',
     description: 'A web-based system designed to manage and visualize academic schedules across three different dimensions: Students, Teachers, and Classrooms.',
+    repoUrl: 'https://github.com/ronnakritnet',
     features: [
       'Triple-View Scheduling Interface (Student, Teacher, Room)',
       'Conflict-Free Session Management (Automated Schedule Collision Check)',

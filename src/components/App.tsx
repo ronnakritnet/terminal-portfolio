@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Terminal from './Terminal/Terminal';
 import Footer from './Footer';
-import FAB from './FAB';
 
 const App: React.FC = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -28,7 +27,6 @@ const App: React.FC = () => {
         <Terminal />
       </div>
       <Footer />
-      <FAB />
     </div>
   );
 };

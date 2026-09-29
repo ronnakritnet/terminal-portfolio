@@ -4,13 +4,18 @@ import { PROJECTS_DATA, CERTS_DATA } from '../../../data/portfolio';
 // Generate project files dynamically from single source of truth
 const projectsChildren: Record<string, FileSystemNode> = {};
 for (const p of PROJECTS_DATA) {
+  const links: string[] = [];
+  if (p.liveUrl) links.push(`Live Demo     : ${p.liveUrl}`);
+  if (p.repoUrl) links.push(`Repository    : ${p.repoUrl}`);
+  const linksSection = links.length > 0 ? `\nLINKS:\n${links.map(l => `- ${l}`).join('\n')}\n` : '';
+
   projectsChildren[p.filename] = {
     type: 'file',
     content: `
 PROJECT: ${p.title}
 
 ${p.description}
-
+${linksSection}
 FEATURES:
 ${p.features.map(f => `- ${f}`).join('\n')}
 

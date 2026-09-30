@@ -434,7 +434,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
           return (
             <div key={line.id} className="mb-2">
               {line.type === 'input' && (
-                <div className="flex items-center">
+                <div className="flex items-center text-xs sm:text-sm">
                   <span style={{ color: 'var(--terminal-green)' }}>
                     <span className="hidden min-[360px]:inline">ronnakrit@</span>portfolio
                   </span>
@@ -448,7 +448,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
               )}
               {line.type === 'output' && (
                 <pre
-                  className="whitespace-pre-wrap text-sm"
+                  className="whitespace-pre-wrap text-xs sm:text-sm"
                   style={{ color: 'var(--terminal-light-green)' }}
                   dangerouslySetInnerHTML={{
                     __html: renderTerminalContent(line.content)
@@ -457,7 +457,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
               )}
               {line.type === 'error' && (
                 <pre
-                  className="whitespace-pre-wrap text-sm"
+                  className="whitespace-pre-wrap text-xs sm:text-sm"
                   style={{ color: '#ff6b6b' }}
                 >
                   {renderTerminalContent(line.content)}
@@ -507,7 +507,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
         </div>
 
         {/* Current Input Line - Inside Terminal Container */}
-        <div className="flex items-center">
+        <div className="flex items-center text-xs sm:text-sm">
           <span style={{ color: 'var(--terminal-green)' }}>
             <span className="hidden min-[360px]:inline">ronnakrit@</span>portfolio
           </span>
@@ -527,7 +527,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
               autoComplete="off"
               autoCorrect="off"
               spellCheck={false}
-              className="w-full bg-transparent outline-none text-white font-mono caret-green-400"
+              className="w-full bg-transparent outline-none text-white font-mono caret-green-400 text-xs sm:text-sm"
               style={{ 
                 color: 'var(--terminal-white)',
                 caretColor: 'var(--terminal-green)'
@@ -538,7 +538,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
             {/* Ghost Suggestion */}
             {currentInput.length > 0 && ghostSuggestion && ghostSuggestion.toLowerCase().startsWith(currentInput.toLowerCase()) && (
               <span
-                className="absolute left-0 top-0 pointer-events-none text-gray-500 font-mono"
+                className="absolute left-0 top-0 pointer-events-none text-gray-500 font-mono text-xs sm:text-sm"
                 style={{
                   color: 'var(--terminal-gray)',
                   opacity: 0.5

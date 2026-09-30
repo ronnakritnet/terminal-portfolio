@@ -37,29 +37,23 @@ const ASCIIBanner: React.FC<ASCIIBannerProps> = () => {
         </div>
       </div>
 
-      {/* Terminal Intro and Profile Details - Always crisp and readable across all devices */}
-      <div className="mt-3 text-xs sm:text-sm font-mono space-y-2 leading-relaxed" style={{ color: 'var(--terminal-light-green)' }}>
-        <p className="text-gray-300">
-          Welcome to Ronnakrit's Terminal <span className="text-green-400">[Version 1.0.1]</span>
-          <br />
-          <span className="text-gray-400">Authorized session.</span>
-        </p>
+      {/* Terminal Intro and Profile Details - 100% green color, matches command outputs font size */}
+      <pre 
+        className="mt-3 text-xs sm:text-sm font-mono whitespace-pre-wrap leading-relaxed"
+        style={{ color: 'var(--terminal-light-green)' }}
+      >
+{`Welcome to Ronnakrit's Terminal [Version 1.0.1]
+Authorized session.
 
-        <div className="pt-1">
-          <div className="text-green-400 font-bold mb-1">USER_PROFILE:</div>
-          <div className="pl-2 sm:pl-4 space-y-0.5 text-gray-300">
-            <div>- Role &nbsp; &nbsp; : <span className="text-white">Computer Engineering Student</span></div>
-            <div>- Focus &nbsp; &nbsp;: <span className="text-white">Network Engineering &amp; Automation</span></div>
-            <div>- Status &nbsp; : <span className="text-white">CCNA Preparation | Linux Enthusiast</span></div>
-            <div>- Session &nbsp;: <span className="text-white">{sessionTime || 'Active'} (Active)</span></div>
-          </div>
-        </div>
+USER_PROFILE:
+  - Role     : Computer Engineering Student
+  - Focus    : Network Engineering & Automation
+  - Status   : CCNA Preparation | Linux Enthusiast
+  - Session  : ${sessionTime || 'Active'} (Active)
 
-        <div className="pt-1 text-gray-400 space-y-0.5 text-[11px] sm:text-xs">
-          <div>* Type <span className="text-green-400 font-semibold">'help'</span> to explore available commands.</div>
-          <div>* Type <span className="text-green-400 font-semibold">'about'</span> for more information.</div>
-        </div>
-      </div>
+* Type 'help' to explore available commands.
+* Type 'about' for more information.`}
+      </pre>
     </div>
   );
 };

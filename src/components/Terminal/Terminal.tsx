@@ -401,7 +401,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
   };
 
   return (
-    <div className="flex-1 bg-[#08090c] text-green-400 font-mono flex flex-col">
+    <div className="flex-1 bg-[#0b1329] text-green-400 font-mono flex flex-col">
       {/* Executing Toast Notification */}
       {toast && (
         <div

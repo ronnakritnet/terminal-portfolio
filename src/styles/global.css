@@ -2,7 +2,7 @@
 
 @layer base {
   :root {
-    --terminal-bg: #08090c;
+    --terminal-bg: #0b1329;
     --terminal-green: #00FF00;
     --terminal-blue: #0080FF;
     --terminal-gray: #666666;
@@ -21,7 +21,7 @@
   }
   
   body {
-    background-color: #08090c;
+    background-color: #0b1329;
     color: var(--terminal-green);
     margin: 0;
     padding: 0;

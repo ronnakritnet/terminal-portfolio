@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Terminal from './Terminal/Terminal';
-import Footer from './Footer';
 
 const App: React.FC = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -26,7 +25,6 @@ const App: React.FC = () => {
       <div className="flex-1 flex flex-col">
         <Terminal />
       </div>
-      <Footer />
     </div>
   );
 };

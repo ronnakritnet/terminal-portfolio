@@ -436,7 +436,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
               {line.type === 'input' && (
                 <div className="flex items-center">
                   <span style={{ color: 'var(--terminal-green)' }}>
-                    <span className="hidden sm:inline">ronnakrit@</span>portfolio
+                    <span className="hidden min-[360px]:inline">ronnakrit@</span>portfolio
                   </span>
                   <span className="mx-1 text-white">:</span>
                   <span style={{ color: 'var(--terminal-blue)' }}>
@@ -483,7 +483,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
         )}
 
         {/* Quick Command Action Chips (For non-CLI visitors) */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-3 pb-2 mb-3 border-t border-gray-800/80">
+        <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 pt-3 pb-2 mb-3 border-t border-gray-800/80">
           <span className="text-xs text-gray-400 font-mono flex items-center mr-1 select-none">
             <span className="text-green-400 mr-1">⚡</span>
             <span className="hidden sm:inline">Quick:</span>
@@ -497,7 +497,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
                 e.stopPropagation();
                 simulateTyping(cmd);
               }}
-              className="px-2.5 py-1 text-xs font-mono bg-gray-800/80 hover:bg-green-950/60 text-green-400 hover:text-green-300 border border-green-800/70 hover:border-green-400 rounded transition-all duration-150 cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed select-none"
+              className="px-2 sm:px-2.5 py-0.5 sm:py-1 text-[11px] sm:text-xs font-mono bg-gray-800/80 hover:bg-green-950/60 text-green-400 hover:text-green-300 border border-green-800/70 hover:border-green-400 rounded transition-all duration-150 cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed select-none"
               title={`Run command: ${cmd}`}
             >
               <span className="text-green-600 mr-1 select-none">$</span>
@@ -509,7 +509,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
         {/* Current Input Line - Inside Terminal Container */}
         <div className="flex items-center">
           <span style={{ color: 'var(--terminal-green)' }}>
-            <span className="hidden sm:inline">ronnakrit@</span>portfolio
+            <span className="hidden min-[360px]:inline">ronnakrit@</span>portfolio
           </span>
           <span className="mx-1 text-white">:</span>
           <span style={{ color: 'var(--terminal-blue)' }}>

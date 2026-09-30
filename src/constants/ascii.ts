@@ -1,11 +1,23 @@
 // ASCII Art Constants for Terminal
-export const asciiArt = `
+export const asciiLogo = `
 ██████╗  ██████╗ ███╗   ██╗███╗   ██╗ █████╗ ██╗  ██╗██████╗ ██╗████████╗
 ██╔══██╗██╔═══██╗████╗  ██║████╗  ██║██╔══██╗██║ ██╔╝██╔══██╗██║╚══██╔══╝
 ██████╔╝██║   ██║██╔██╗ ██║██╔██╗ ██║███████║█████╔╝ ██████╔╝██║   ██║   
 ██╔══██╗██║   ██║██║╚██╗██║██║╚██╗██║██╔══██║██╔═██╗ ██╔══██╗██║   ██║   
 ██║  ██║╚██████╔╝██║ ╚████║██║ ╚████║██║  ██║██║  ██╗██║  ██║██║   ██║   
 ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝   ╚═╝   
+`.trim();
+
+export const asciiLogoMobile = `
+██████╗  ██████╗ ███╗   ██╗
+██╔══██╗██╔═══██╗████╗  ██║
+██████╔╝██║   ██║██╔██╗ ██║
+██╔══██╗██║   ██║██║╚██╗██║
+██║  ██║╚██████╔╝██║ ╚████║
+╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+`.trim();
+
+export const asciiArt = `${asciiLogo}
 
 Welcome to Ronnakrit's Terminal [Version 1.0.1]
 Authorized session.
@@ -20,13 +32,7 @@ USER_PROFILE:
 * Type 'about' for more information.
 `;
 
-export const asciiArtMobile = `
-██████╗  ██████╗ ███╗   ██╗
-██╔══██╗██╔═══██╗████╗  ██║
-██████╔╝██║   ██║██╔██╗ ██║
-██╔══██╗██║   ██║██║╚██╗██║
-██║  ██║╚██████╔╝██║ ╚████║
-╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+export const asciiArtMobile = `${asciiLogoMobile}
 
 Welcome to Ronnakrit's Terminal [Version 1.0.1]
 Authorized session.

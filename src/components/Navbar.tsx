@@ -17,9 +17,9 @@ const Navbar: React.FC = () => {
 
         {/* Status / Quick External Links */}
         <div className="flex items-center space-x-4 font-mono text-xs md:text-sm">
-          <div className="hidden sm:flex items-center space-x-1.5 text-gray-400">
+          <div className="flex items-center space-x-1.5 text-gray-400 text-xs">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            <span>CLI session active</span>
+            <span className="hidden sm:inline">CLI session active</span>
           </div>
           <div className="flex items-center space-x-3 text-gray-400">
             <a

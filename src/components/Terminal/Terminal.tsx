@@ -3,11 +3,11 @@ import type { TerminalLine, TerminalProps, PathArray } from './types';
 import { fileSystem } from './data/fileSystem';
 import { COMMANDS_DESC, HELP_OUTPUT } from './data/commands';
 import { renderTerminalContent } from './utils/linkRenderer';
-import { 
-  handleWhoisCommand, 
-  handleSudoCommand, 
-  handleCatCommand, 
-  handleLsCommand, 
+import {
+  handleWhoisCommand,
+  handleSudoCommand,
+  handleCatCommand,
+  handleLsCommand,
   handleCdCommand,
   handleTreeCommand
 } from './utils/commandHandlers';
@@ -78,7 +78,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     isInitialLoad,
     setIsInitialLoad
   } = useTerminalState();
-  
+
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const [isTyping, setIsTyping] = useState(false);
@@ -88,10 +88,10 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
   // Command execution logic
   const executeCommand = useCallback((command: string) => {
     const trimmedCommand = command.trim();
-    
+
     // Handle empty commands
     if (!trimmedCommand) return;
-    
+
     const parts = trimmedCommand.split(' ');
     const mainCommand = parts[0];
     const args = parts.slice(1);
@@ -140,7 +140,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
         output = fileSystem['about.md'].content || 'About information not found.';
         break;
 
-      case 'projects':  
+      case 'projects':
         output = `PROJECTS DIRECTORY:
   📄 ronnakrit-net.md               - Interactive Portfolio & Terminal Interface
   📄 schedule-management-system.md  - Academic Triple-view Schedule Manager
@@ -206,18 +206,18 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
       default:
         const DIRECT_PATH_PREFIXES = ['projects/', 'certs/'];
         let handled = false;
-        
+
         for (const prefix of DIRECT_PATH_PREFIXES) {
           if (mainCommand.startsWith(prefix)) {
             const filename = mainCommand.slice(prefix.length);
-            
+
             // Validate that a filename was provided
             if (!filename) {
               output = `-bash: ${mainCommand}: No file specified`;
               handled = true;
               break;
             }
-            
+
             // Auto-append .md if not present and execute as cat command resolved from root
             const fullPath = mainCommand.endsWith('.md') ? mainCommand : mainCommand + '.md';
             const catResult = handleCatCommand([fullPath], [], fileSystem);
@@ -226,7 +226,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
             break;
           }
         }
-        
+
         if (!handled) {
           output = `-bash: ${mainCommand}: command not found\nType 'help' for available commands.`;
         }
@@ -288,10 +288,10 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     const checkMobileHandler = () => {
       setIsMobile(window.innerWidth <= TERMINAL_CONSTANTS.MOBILE_BREAKPOINT_PX);
     };
-    
+
     checkMobileHandler();
     window.addEventListener('resize', checkMobileHandler);
-    
+
     return () => window.removeEventListener('resize', checkMobileHandler);
   }, [setIsMobile]);
 
@@ -305,26 +305,26 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
   // Typing simulation for external command execution
   const simulateTyping = useCallback(async (command: string) => {
     if (isTypingRef.current) return;
-    
+
     isTypingRef.current = true;
     setIsTyping(true);
     setCurrentInput('');
-    
+
     // Focus the input field
     if (inputRef.current) {
       inputRef.current.focus();
     }
-    
+
     try {
       // Type character by character
       for (let i = 0; i <= command.length; i++) {
         setCurrentInput(command.substring(0, i));
         await new Promise(resolve => setTimeout(resolve, TERMINAL_CONSTANTS.TYPING_CHAR_DELAY_MS));
       }
-      
+
       // Wait a moment before executing
       await new Promise(resolve => setTimeout(resolve, TERMINAL_CONSTANTS.TYPING_EXECUTION_DELAY_MS));
-      
+
       // Execute the command
       executeCommand(command);
     } finally {
@@ -354,7 +354,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
       if (!hash) return;
       // Do not re-execute if already processed
       if (hash === lastExecutedHashRef.current) return;
-      
+
       if ((VALID_HASH_COMMANDS as readonly string[]).includes(hash)) {
         lastExecutedHashRef.current = hash;
         timerId = window.setTimeout(() => {
@@ -404,9 +404,9 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
     <div className="flex-1 bg-black text-green-400 font-mono flex flex-col">
       {/* Executing Toast Notification */}
       {toast && (
-        <div 
+        <div
           className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-gray-900 text-green-400 px-4 py-2 rounded-lg shadow-lg border border-green-700 z-50 transition-all duration-300 ease-in-out font-mono text-sm"
-          style={{ 
+          style={{
             backgroundColor: '#1a1a1a',
             borderColor: '#16a34a',
             animation: 'fadeInOut 2s ease-in-out'
@@ -416,24 +416,73 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
         </div>
       )}
 
-      {/* Terminal Main Stream (Full-screen pure terminal canvas) */}
+      {/* Terminal Main Container (Frame/Card border removed) */}
       <div 
         ref={terminalRef}
         onClick={handleTerminalClick}
-        className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 pt-16 pb-24 flex flex-col cursor-text"
+        className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 pt-20 pb-20 flex flex-col cursor-text"
       >
         {/* ASCII Banner - First element in terminal */}
-        {showBanner && (
-          <div className="mb-4">
-            <ASCIIBanner isMobile={isMobile} />
-            
-            {/* Quick Command Action Chips (inside Welcome Banner) */}
-            <div className="my-3 pt-2.5 border-t border-gray-900/90">
-              <div className="text-xs text-gray-400 font-mono mb-2 flex items-center gap-1.5 select-none">
-                <span className="text-green-400 font-bold">⚡ Quick commands:</span>
-                <span className="text-gray-500 hidden sm:inline">(Click to run or type below)</span>
-              </div>
-              <div className="flex flex-wrap items-center gap-1.5">
+        {showBanner && <ASCIIBanner isMobile={isMobile} />}
+
+              {lines.map((line) => {
+                return (
+                  <div key={line.id} className="mb-2">
+                    {line.type === 'input' && (
+                      <div className="flex items-center">
+                        <span style={{ color: 'var(--terminal-green)' }}>
+                          <span className="hidden sm:inline">ronnakrit@</span>portfolio
+                        </span>
+                        <span className="mx-1 text-white">:</span>
+                        <span style={{ color: 'var(--terminal-blue)' }}>
+                          {line.path || '~'}
+                        </span>
+                        <span className="mx-1 text-white">$</span>
+                        <span className="ml-2 text-white">{line.content}</span>
+                      </div>
+                    )}
+                    {line.type === 'output' && (
+                      <pre
+                        className="whitespace-pre-wrap text-sm"
+                        style={{ color: 'var(--terminal-light-green)' }}
+                        dangerouslySetInnerHTML={{
+                          __html: renderTerminalContent(line.content)
+                        }}
+                      />
+                    )}
+                    {line.type === 'error' && (
+                      <pre
+                        className="whitespace-pre-wrap text-sm"
+                        style={{ color: '#ff6b6b' }}
+                      >
+                        {renderTerminalContent(line.content)}
+                      </pre>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Tab Suggestions Display */}
+              {suggestions.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 my-2 p-1.5 bg-gray-800/70 rounded border border-gray-700/60 text-xs font-mono">
+                  <span className="text-gray-400 select-none mr-1">Matches:</span>
+                  {suggestions.map((item, idx) => (
+                    <span
+                      key={idx}
+                      className="px-1.5 py-0.5 bg-gray-900/90 text-green-300 rounded border border-green-800/40 text-[11px]"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Quick Command Action Chips (For non-CLI visitors) */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-3 pb-2 mb-3 border-t border-gray-800/80">
+                <span className="text-xs text-gray-400 font-mono flex items-center mr-1 select-none">
+                  <span className="text-green-400 mr-1">⚡</span>
+                  <span className="hidden sm:inline">Quick:</span>
+                </span>
                 {QUICK_COMMANDS.map((cmd) => (
                   <button
                     key={cmd}
@@ -443,7 +492,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
                       e.stopPropagation();
                       simulateTyping(cmd);
                     }}
-                    className="px-2.5 py-1 text-xs font-mono bg-gray-900/90 hover:bg-green-950/70 text-green-400 hover:text-green-300 border border-green-800/60 hover:border-green-400 rounded transition-all duration-150 cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed select-none shadow-sm"
+                    className="px-2.5 py-1 text-xs font-mono bg-gray-800/80 hover:bg-green-950/60 text-green-400 hover:text-green-300 border border-green-800/70 hover:border-green-400 rounded transition-all duration-150 cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed select-none"
                     title={`Run command: ${cmd}`}
                   >
                     <span className="text-green-600 mr-1 select-none">$</span>
@@ -451,103 +500,47 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
                   </button>
                 ))}
               </div>
-            </div>
-          </div>
-        )}
-        
-        {/* Command Output Stream */}
-        {lines.map((line) => {
-          return (
-            <div key={line.id} className="mb-2">
-              {line.type === 'input' && (
-                <div className="flex items-center">
-                  <span style={{ color: 'var(--terminal-green)' }}>
-                    <span className="hidden sm:inline">ronnakrit@</span>portfolio
-                  </span>
-                  <span className="mx-1 text-white">:</span>
-                  <span style={{ color: 'var(--terminal-blue)' }}>
-                    {line.path || '~'}
-                  </span>
-                  <span className="mx-1 text-white">$</span>
-                  <span className="ml-2 text-white">{line.content}</span>
+
+              {/* Current Input Line - Inside Terminal Container */}
+              <div className="flex items-center">
+                <span style={{ color: 'var(--terminal-green)' }}>
+                  <span className="hidden sm:inline">ronnakrit@</span>portfolio
+                </span>
+                <span className="mx-1 text-white">:</span>
+                <span style={{ color: 'var(--terminal-blue)' }}>
+                  {pathArrayToString(currentPath)}
+                </span>
+                <span className="mx-1 text-white">$</span>
+                <div className="flex-1 relative ml-2 min-w-0">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={currentInput}
+                    onChange={handleInputChangeHandler}
+                    onKeyDown={handleInput}
+                    autoCapitalize="none"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    className="w-full bg-transparent outline-none text-white"
+                    style={{ color: 'var(--terminal-white)' }}
+                    placeholder={currentInput.length === 0 ? "Type a command..." : ""}
+                    data-ghost-suggestion={ghostSuggestion}
+                  />
+                  {/* Ghost Suggestion */}
+                  {currentInput.length > 0 && ghostSuggestion && ghostSuggestion.toLowerCase().startsWith(currentInput.toLowerCase()) && (
+                    <span
+                      className="absolute left-0 top-0 pointer-events-none text-gray-500 font-mono"
+                      style={{
+                        color: 'var(--terminal-gray)',
+                        opacity: 0.5
+                      }}
+                    >
+                      <span className="invisible select-none">{currentInput}</span>
+                      <span>{ghostSuggestion.slice(currentInput.length)}</span>
+                    </span>
+                  )}
                 </div>
-              )}
-              {line.type === 'output' && (
-                <pre 
-                  className="whitespace-pre-wrap text-sm"
-                  style={{ color: 'var(--terminal-light-green)' }}
-                  dangerouslySetInnerHTML={{
-                    __html: renderTerminalContent(line.content)
-                  }}
-                />
-              )}
-              {line.type === 'error' && (
-                <pre 
-                  className="whitespace-pre-wrap text-sm"
-                  style={{ color: '#ff6b6b' }}
-                >
-                  {renderTerminalContent(line.content)}
-                </pre>
-              )}
-            </div>
-          );
-        })}
-
-        {/* Tab Suggestions Display */}
-        {suggestions.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 my-2 p-1.5 bg-gray-900/90 rounded border border-gray-800 text-xs font-mono">
-            <span className="text-gray-400 select-none mr-1">Matches:</span>
-            {suggestions.map((item, idx) => (
-              <span 
-                key={idx} 
-                className="px-1.5 py-0.5 bg-black text-green-300 rounded border border-green-800/40 text-[11px]"
-              >
-                {item}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Current Input Line - Direct Terminal Flow */}
-        <div className="flex items-center mt-1">
-          <span style={{ color: 'var(--terminal-green)' }}>
-            <span className="hidden sm:inline">ronnakrit@</span>portfolio
-          </span>
-          <span className="mx-1 text-white">:</span>
-          <span style={{ color: 'var(--terminal-blue)' }}>
-            {pathArrayToString(currentPath)}
-          </span>
-          <span className="mx-1 text-white">$</span>
-          <div className="flex-1 relative ml-2 min-w-0">
-            <input
-              ref={inputRef}
-              type="text"
-              value={currentInput}
-              onChange={handleInputChangeHandler}
-              onKeyDown={handleInput}
-              autoCapitalize="none"
-              autoComplete="off"
-              autoCorrect="off"
-              spellCheck={false}
-              className="w-full bg-transparent outline-none text-white font-mono"
-              style={{ color: 'var(--terminal-white)' }}
-              placeholder={currentInput.length === 0 ? "Type a command..." : ""}
-              data-ghost-suggestion={ghostSuggestion}
-            />
-            {/* Ghost Suggestion */}
-            {currentInput.length > 0 && ghostSuggestion && ghostSuggestion.toLowerCase().startsWith(currentInput.toLowerCase()) && (
-              <span 
-                className="absolute left-0 top-0 pointer-events-none text-gray-500 font-mono"
-                style={{ 
-                  color: 'var(--terminal-gray)',
-                  opacity: 0.5
-                }}
-              >
-                <span className="invisible select-none">{currentInput}</span>
-                <span>{ghostSuggestion.slice(currentInput.length)}</span>
-              </span>
-            )}
-          </div>
         </div>
       </div>
     </div>

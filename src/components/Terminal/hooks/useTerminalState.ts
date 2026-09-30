@@ -5,7 +5,7 @@ import type { TerminalLine, PathArray } from '../types';
 // Terminal Constants
 const TERMINAL_CONSTANTS = {
   TOAST_DURATION_MS: 2500,
-  MOBILE_BREAKPOINT_PX: 768,
+  MOBILE_BREAKPOINT_PX: 640,
 } as const;
 
 export const useTerminalState = () => {

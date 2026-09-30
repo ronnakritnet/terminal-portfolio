@@ -29,6 +29,7 @@ const TERMINAL_CONSTANTS = {
 } as const;
 
 const QUICK_COMMANDS = [
+  'help',
   'about',
   'projects',
   'skills',
@@ -395,13 +396,17 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
 
   const handleTerminalClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    if (target.tagName.toLowerCase() === 'a') return;
+    if (target.tagName.toLowerCase() === 'a' || target.closest('a')) return;
+    if (target.tagName.toLowerCase() === 'button' || target.closest('button')) return;
     if (window.getSelection()?.toString()) return;
     inputRef.current?.focus();
   };
 
   return (
-    <div className="flex-1 bg-gray-950 text-green-400 font-mono flex flex-col">
+    <div 
+      onClick={handleTerminalClick}
+      className="flex-1 bg-gray-950 text-green-400 font-mono flex flex-col cursor-text min-h-screen"
+    >
       {/* Executing Toast Notification */}
       {toast && (
         <div
@@ -522,8 +527,11 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
               autoComplete="off"
               autoCorrect="off"
               spellCheck={false}
-              className="w-full bg-transparent outline-none text-white"
-              style={{ color: 'var(--terminal-white)' }}
+              className="w-full bg-transparent outline-none text-white font-mono caret-green-400"
+              style={{ 
+                color: 'var(--terminal-white)',
+                caretColor: 'var(--terminal-green)'
+              }}
               placeholder={currentInput.length === 0 ? "Type a command..." : ""}
               data-ghost-suggestion={ghostSuggestion}
             />

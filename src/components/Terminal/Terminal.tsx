@@ -401,7 +401,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
   };
 
   return (
-    <div className="flex-1 bg-[#0b1329] text-green-400 font-mono flex flex-col">
+    <div className="flex-1 bg-[#0a1638] text-green-400 font-mono flex flex-col">
       {/* Executing Toast Notification */}
       {toast && (
         <div
@@ -417,7 +417,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
       )}
 
       {/* Terminal Main Container (Frame/Card border removed) */}
-      <div 
+      <div
         ref={terminalRef}
         onClick={handleTerminalClick}
         className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 pt-20 pb-20 flex flex-col cursor-text"
@@ -425,122 +425,122 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
         {/* ASCII Banner - First element in terminal */}
         {showBanner && <ASCIIBanner isMobile={isMobile} />}
 
-              {lines.map((line) => {
-                return (
-                  <div key={line.id} className="mb-2">
-                    {line.type === 'input' && (
-                      <div className="flex items-center">
-                        <span style={{ color: 'var(--terminal-green)' }}>
-                          <span className="hidden sm:inline">ronnakrit@</span>portfolio
-                        </span>
-                        <span className="mx-1 text-white">:</span>
-                        <span style={{ color: 'var(--terminal-blue)' }}>
-                          {line.path || '~'}
-                        </span>
-                        <span className="mx-1 text-white">$</span>
-                        <span className="ml-2 text-white">{line.content}</span>
-                      </div>
-                    )}
-                    {line.type === 'output' && (
-                      <pre
-                        className="whitespace-pre-wrap text-sm"
-                        style={{ color: 'var(--terminal-light-green)' }}
-                        dangerouslySetInnerHTML={{
-                          __html: renderTerminalContent(line.content)
-                        }}
-                      />
-                    )}
-                    {line.type === 'error' && (
-                      <pre
-                        className="whitespace-pre-wrap text-sm"
-                        style={{ color: '#ff6b6b' }}
-                      >
-                        {renderTerminalContent(line.content)}
-                      </pre>
-                    )}
-                  </div>
-                );
-              })}
-
-              {/* Tab Suggestions Display */}
-              {suggestions.length > 0 && (
-                <div className="flex flex-wrap items-center gap-1.5 my-2 p-1.5 bg-gray-800/70 rounded border border-gray-700/60 text-xs font-mono">
-                  <span className="text-gray-400 select-none mr-1">Matches:</span>
-                  {suggestions.map((item, idx) => (
-                    <span
-                      key={idx}
-                      className="px-1.5 py-0.5 bg-gray-900/90 text-green-300 rounded border border-green-800/40 text-[11px]"
-                    >
-                      {item}
-                    </span>
-                  ))}
+        {lines.map((line) => {
+          return (
+            <div key={line.id} className="mb-2">
+              {line.type === 'input' && (
+                <div className="flex items-center">
+                  <span style={{ color: 'var(--terminal-green)' }}>
+                    <span className="hidden sm:inline">ronnakrit@</span>portfolio
+                  </span>
+                  <span className="mx-1 text-white">:</span>
+                  <span style={{ color: 'var(--terminal-blue)' }}>
+                    {line.path || '~'}
+                  </span>
+                  <span className="mx-1 text-white">$</span>
+                  <span className="ml-2 text-white">{line.content}</span>
                 </div>
               )}
+              {line.type === 'output' && (
+                <pre
+                  className="whitespace-pre-wrap text-sm"
+                  style={{ color: 'var(--terminal-light-green)' }}
+                  dangerouslySetInnerHTML={{
+                    __html: renderTerminalContent(line.content)
+                  }}
+                />
+              )}
+              {line.type === 'error' && (
+                <pre
+                  className="whitespace-pre-wrap text-sm"
+                  style={{ color: '#ff6b6b' }}
+                >
+                  {renderTerminalContent(line.content)}
+                </pre>
+              )}
+            </div>
+          );
+        })}
 
-              {/* Quick Command Action Chips (For non-CLI visitors) */}
-              <div className="flex flex-wrap items-center gap-1.5 pt-3 pb-2 mb-3 border-t border-gray-800/80">
-                <span className="text-xs text-gray-400 font-mono flex items-center mr-1 select-none">
-                  <span className="text-green-400 mr-1">⚡</span>
-                  <span className="hidden sm:inline">Quick:</span>
-                </span>
-                {QUICK_COMMANDS.map((cmd) => (
-                  <button
-                    key={cmd}
-                    type="button"
-                    disabled={isTyping}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      simulateTyping(cmd);
-                    }}
-                    className="px-2.5 py-1 text-xs font-mono bg-gray-800/80 hover:bg-green-950/60 text-green-400 hover:text-green-300 border border-green-800/70 hover:border-green-400 rounded transition-all duration-150 cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed select-none"
-                    title={`Run command: ${cmd}`}
-                  >
-                    <span className="text-green-600 mr-1 select-none">$</span>
-                    {cmd}
-                  </button>
-                ))}
-              </div>
+        {/* Tab Suggestions Display */}
+        {suggestions.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5 my-2 p-1.5 bg-gray-800/70 rounded border border-gray-700/60 text-xs font-mono">
+            <span className="text-gray-400 select-none mr-1">Matches:</span>
+            {suggestions.map((item, idx) => (
+              <span
+                key={idx}
+                className="px-1.5 py-0.5 bg-gray-900/90 text-green-300 rounded border border-green-800/40 text-[11px]"
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+        )}
 
-              {/* Current Input Line - Inside Terminal Container */}
-              <div className="flex items-center">
-                <span style={{ color: 'var(--terminal-green)' }}>
-                  <span className="hidden sm:inline">ronnakrit@</span>portfolio
-                </span>
-                <span className="mx-1 text-white">:</span>
-                <span style={{ color: 'var(--terminal-blue)' }}>
-                  {pathArrayToString(currentPath)}
-                </span>
-                <span className="mx-1 text-white">$</span>
-                <div className="flex-1 relative ml-2 min-w-0">
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={currentInput}
-                    onChange={handleInputChangeHandler}
-                    onKeyDown={handleInput}
-                    autoCapitalize="none"
-                    autoComplete="off"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    className="w-full bg-transparent outline-none text-white"
-                    style={{ color: 'var(--terminal-white)' }}
-                    placeholder={currentInput.length === 0 ? "Type a command..." : ""}
-                    data-ghost-suggestion={ghostSuggestion}
-                  />
-                  {/* Ghost Suggestion */}
-                  {currentInput.length > 0 && ghostSuggestion && ghostSuggestion.toLowerCase().startsWith(currentInput.toLowerCase()) && (
-                    <span
-                      className="absolute left-0 top-0 pointer-events-none text-gray-500 font-mono"
-                      style={{
-                        color: 'var(--terminal-gray)',
-                        opacity: 0.5
-                      }}
-                    >
-                      <span className="invisible select-none">{currentInput}</span>
-                      <span>{ghostSuggestion.slice(currentInput.length)}</span>
-                    </span>
-                  )}
-                </div>
+        {/* Quick Command Action Chips (For non-CLI visitors) */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-3 pb-2 mb-3 border-t border-gray-800/80">
+          <span className="text-xs text-gray-400 font-mono flex items-center mr-1 select-none">
+            <span className="text-green-400 mr-1">⚡</span>
+            <span className="hidden sm:inline">Quick:</span>
+          </span>
+          {QUICK_COMMANDS.map((cmd) => (
+            <button
+              key={cmd}
+              type="button"
+              disabled={isTyping}
+              onClick={(e) => {
+                e.stopPropagation();
+                simulateTyping(cmd);
+              }}
+              className="px-2.5 py-1 text-xs font-mono bg-gray-800/80 hover:bg-green-950/60 text-green-400 hover:text-green-300 border border-green-800/70 hover:border-green-400 rounded transition-all duration-150 cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed select-none"
+              title={`Run command: ${cmd}`}
+            >
+              <span className="text-green-600 mr-1 select-none">$</span>
+              {cmd}
+            </button>
+          ))}
+        </div>
+
+        {/* Current Input Line - Inside Terminal Container */}
+        <div className="flex items-center">
+          <span style={{ color: 'var(--terminal-green)' }}>
+            <span className="hidden sm:inline">ronnakrit@</span>portfolio
+          </span>
+          <span className="mx-1 text-white">:</span>
+          <span style={{ color: 'var(--terminal-blue)' }}>
+            {pathArrayToString(currentPath)}
+          </span>
+          <span className="mx-1 text-white">$</span>
+          <div className="flex-1 relative ml-2 min-w-0">
+            <input
+              ref={inputRef}
+              type="text"
+              value={currentInput}
+              onChange={handleInputChangeHandler}
+              onKeyDown={handleInput}
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+              className="w-full bg-transparent outline-none text-white"
+              style={{ color: 'var(--terminal-white)' }}
+              placeholder={currentInput.length === 0 ? "Type a command..." : ""}
+              data-ghost-suggestion={ghostSuggestion}
+            />
+            {/* Ghost Suggestion */}
+            {currentInput.length > 0 && ghostSuggestion && ghostSuggestion.toLowerCase().startsWith(currentInput.toLowerCase()) && (
+              <span
+                className="absolute left-0 top-0 pointer-events-none text-gray-500 font-mono"
+                style={{
+                  color: 'var(--terminal-gray)',
+                  opacity: 0.5
+                }}
+              >
+                <span className="invisible select-none">{currentInput}</span>
+                <span>{ghostSuggestion.slice(currentInput.length)}</span>
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>

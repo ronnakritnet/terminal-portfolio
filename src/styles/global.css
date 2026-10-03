@@ -1,76 +1,158 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --terminal-bg: var(--color-gray-950, #030712);
-    --terminal-green: #00FF00;
-    --terminal-blue: #0080FF;
-    --terminal-gray: #666666;
-    --terminal-light-green: #90EE90;
-    --terminal-white: #F0F0F0;
+:root {
+  --terminal-bg: #030712;
+  --terminal-green: #00FF00;
+  --terminal-blue: #0080FF;
+  --terminal-gray: #666666;
+  --terminal-light-green: #90EE90;
+  --terminal-white: #F0F0F0;
+}
+
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  background-color: #030712;
+  scrollbar-color: #1f2937 #030712;
+}
+
+* {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  scrollbar-width: thin;
+  scrollbar-color: #1f2937 #030712;
+}
+
+body {
+  background-color: #030712;
+  color: var(--terminal-green);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   Custom Terminal Text Selection (Global)
+   ========================================================================== */
+::selection {
+  background-color: rgba(74, 222, 128, 0.25) !important;
+  color: #4ade80 !important;
+  text-shadow: 0 0 6px rgba(74, 222, 128, 0.5);
+}
+
+::-moz-selection {
+  background-color: rgba(74, 222, 128, 0.25) !important;
+  color: #4ade80 !important;
+  text-shadow: 0 0 6px rgba(74, 222, 128, 0.5);
+}
+
+*::selection {
+  background-color: rgba(74, 222, 128, 0.25) !important;
+  color: #4ade80 !important;
+}
+
+*::-moz-selection {
+  background-color: rgba(74, 222, 128, 0.25) !important;
+  color: #4ade80 !important;
+}
+
+/* ==========================================================================
+   Custom Dark Scrollbar (Webkit: Chrome, Edge, Safari, Opera)
+   ========================================================================== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #030712;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 6px;
+  border: 2px solid #030712;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+
+::-webkit-scrollbar-corner {
+  background: #030712;
+}
+
+/* ==========================================================================
+   Interactive Terminal Command Triggers
+   ========================================================================== */
+[data-command] {
+  cursor: pointer;
+  user-select: none;
+}
+
+[data-command]:hover {
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.4);
+}
+
+/* ==========================================================================
+   Terminal Animations
+   ========================================================================== */
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
   }
-
-  html {
-    -moz-text-size-adjust: none;
-    -webkit-text-size-adjust: none;
-    text-size-adjust: none;
+  51%, 100% {
+    opacity: 0;
   }
+}
 
-  * {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+@keyframes typing {
+  from {
+    width: 0;
   }
-
-  body {
-    background-color: var(--color-gray-950, #030712);
-    color: var(--terminal-green);
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
+  to {
+    width: 100%;
   }
+}
 
-  @keyframes blink {
+.cursor-blink {
+  animation: blink 1s infinite;
+}
 
-    0%,
-    50% {
-      opacity: 1;
-    }
+.typing-animation {
+  animation: typing 0.5s steps(30, end);
+  white-space: nowrap;
+  overflow: hidden;
+}
 
-    51%,
-    100% {
-      opacity: 0;
-    }
+.ascii-art {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  max-width: 100%;
+  tab-size: 4;
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* Responsive ASCII Banner display rules */
+@media (min-width: 640px) {
+  .banner-desktop {
+    display: block !important;
   }
-
-  @keyframes typing {
-    from {
-      width: 0;
-    }
-
-    to {
-      width: 100%;
-    }
+  .banner-mobile {
+    display: none !important;
   }
+}
 
-  .cursor-blink {
-    animation: blink 1s infinite;
+@media (max-width: 639px) {
+  .banner-desktop {
+    display: none !important;
   }
-
-  .typing-animation {
-    animation: typing 0.5s steps(30, end);
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  .ascii-art {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    font-size: 12px;
-    line-height: 1.2;
-    white-space: pre-wrap;
-    overflow-x: auto;
-    max-width: 100%;
-    tab-size: 4;
-    -moz-text-size-adjust: none;
-    -webkit-text-size-adjust: none;
-    text-size-adjust: none;
+  .banner-mobile {
+    display: block !important;
   }
 }

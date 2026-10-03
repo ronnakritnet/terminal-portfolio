@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { asciiLogo, asciiLogoMobile } from '../../constants/ascii';
+import { renderTerminalContent } from './utils/linkRenderer';
 
 interface ASCIIBannerProps {
   isMobile?: boolean;
@@ -13,21 +14,21 @@ const ASCIIBanner: React.FC<ASCIIBannerProps> = () => {
   }, []);
 
   return (
-    <div className="select-none font-mono mb-4">
+    <div className="font-mono mb-4">
       {/* ASCII Logo Section - Scales dynamically so full 'RONNAKRIT' displays on tablet & desktop without breaking */}
       <div className="w-full overflow-hidden">
-        {/* Screens >= 500px: Full 'RONNAKRIT' banner scaled smoothly */}
-        <div className="hidden min-[500px]:block">
+        {/* Screens >= sm: Full 'RONNAKRIT' banner */}
+        <div className="banner-desktop hidden sm:block">
           <pre 
-            className="font-mono text-[clamp(7.2px,1.6vw,14px)] leading-[1.12] whitespace-pre text-green-400 select-none overflow-x-hidden"
+            className="font-mono text-[clamp(7.5px,1.6vw,14px)] leading-[1.12] whitespace-pre text-green-400 select-none overflow-x-hidden"
             style={{ color: 'var(--terminal-light-green)' }}
           >
             {asciiLogo}
           </pre>
         </div>
 
-        {/* Small mobile (< 500px): Compact 'RON' banner */}
-        <div className="block min-[500px]:hidden">
+        {/* Small mobile (< sm): Compact 'RON' banner */}
+        <div className="banner-mobile block sm:hidden">
           <pre 
             className="font-mono text-xs sm:text-sm leading-[1.15] whitespace-pre text-green-400 select-none"
             style={{ color: 'var(--terminal-light-green)' }}
@@ -41,8 +42,8 @@ const ASCIIBanner: React.FC<ASCIIBannerProps> = () => {
       <pre 
         className="mt-3 text-xs sm:text-sm font-mono whitespace-pre-wrap leading-relaxed"
         style={{ color: 'var(--terminal-light-green)' }}
-      >
-{`Welcome to Ronnakrit's Terminal [Version 1.0.1]
+        dangerouslySetInnerHTML={{
+          __html: renderTerminalContent(`Welcome to Ronnakrit's Terminal [Version 1.0.1]
 Authorized session.
 
 USER_PROFILE:
@@ -52,8 +53,9 @@ USER_PROFILE:
   - Session  : ${sessionTime || 'Active'} (Active)
 
 * Type 'help' to explore available commands.
-* Type 'about' for more information.`}
-      </pre>
+* Type 'about' for more information.`)
+        }}
+      />
     </div>
   );
 };

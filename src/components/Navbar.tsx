@@ -3,7 +3,7 @@ import React from 'react';
 const Navbar: React.FC = () => {
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-gray-900 border-b border-gray-800">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div className="w-full px-4 sm:px-6 md:px-8 py-3 flex items-center justify-between">
         {/* Logo/Brand */}
         <div className="flex items-center space-x-2">
           <a
@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
         {/* Status / Quick External Links */}
         <div className="flex items-center space-x-4 font-mono text-xs md:text-sm">
           <div className="flex items-center space-x-1.5 text-gray-400 text-xs">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
             <span className="hidden sm:inline">CLI session active</span>
           </div>
           <div className="flex items-center space-x-3 text-gray-400">

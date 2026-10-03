@@ -395,16 +395,47 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
   };
 
   const handleTerminalClick = (e: React.MouseEvent) => {
+    // If text is currently selected, do not trigger command execution or focus
+    if (window.getSelection()?.toString()) return;
+
     const target = e.target as HTMLElement;
+
+    // Check if clicked element or its parent is an interactive command trigger
+    const cmdElement = target.closest('[data-command]') as HTMLElement | null;
+    if (cmdElement) {
+      e.preventDefault();
+      e.stopPropagation();
+      const cmd = cmdElement.getAttribute('data-command');
+      if (cmd) {
+        simulateTyping(cmd);
+      }
+      return;
+    }
+
     if (target.tagName.toLowerCase() === 'a' || target.closest('a')) return;
     if (target.tagName.toLowerCase() === 'button' || target.closest('button')) return;
-    if (window.getSelection()?.toString()) return;
     inputRef.current?.focus();
+  };
+
+  const handleTerminalKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const target = e.target as HTMLElement;
+      const cmdElement = target.closest('[data-command]') as HTMLElement | null;
+      if (cmdElement) {
+        e.preventDefault();
+        e.stopPropagation();
+        const cmd = cmdElement.getAttribute('data-command');
+        if (cmd) {
+          simulateTyping(cmd);
+        }
+      }
+    }
   };
 
   return (
     <div 
       onClick={handleTerminalClick}
+      onKeyDown={handleTerminalKeyDown}
       className="flex-1 bg-gray-950 text-green-400 font-mono flex flex-col cursor-text min-h-screen"
     >
       {/* Executing Toast Notification */}
@@ -425,7 +456,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
       <div
         ref={terminalRef}
         onClick={handleTerminalClick}
-        className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 pt-20 pb-20 flex flex-col cursor-text"
+        className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 pt-20 pb-16 flex flex-col cursor-text"
       >
         {/* ASCII Banner - First element in terminal */}
         {showBanner && <ASCIIBanner isMobile={isMobile} />}
@@ -459,32 +490,39 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
                 <pre
                   className="whitespace-pre-wrap text-xs sm:text-sm"
                   style={{ color: '#ff6b6b' }}
-                >
-                  {renderTerminalContent(line.content)}
-                </pre>
+                  dangerouslySetInnerHTML={{
+                    __html: renderTerminalContent(line.content)
+                  }}
+                />
               )}
             </div>
           );
         })}
 
-        {/* Tab Suggestions Display */}
+        {/* Tab Suggestions Display - Clickable on mobile & desktop */}
         {suggestions.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5 my-2 p-1.5 bg-gray-800/70 rounded border border-gray-700/60 text-xs font-mono">
             <span className="text-gray-400 select-none mr-1">Matches:</span>
             {suggestions.map((item, idx) => (
-              <span
+              <button
                 key={idx}
-                className="px-1.5 py-0.5 bg-gray-900/90 text-green-300 rounded border border-green-800/40 text-[11px]"
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  simulateTyping(item);
+                }}
+                className="px-1.5 py-0.5 bg-gray-900/90 hover:bg-green-950/80 text-green-400 hover:text-green-300 rounded border border-green-800/50 hover:border-green-400 text-[11px] cursor-pointer transition-colors active:scale-95"
+                title={`Click to run: ${item}`}
               >
                 {item}
-              </span>
+              </button>
             ))}
           </div>
         )}
 
-        {/* Quick Command Action Chips (For non-CLI visitors) */}
-        <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 pt-3 pb-2 mb-3 border-t border-gray-800/80">
-          <span className="text-xs text-gray-400 font-mono flex items-center mr-1 select-none">
+        {/* Quick Command Action Toolbar */}
+        <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 p-2 sm:p-2.5 my-3 bg-gray-900/60 border border-gray-800/80 rounded-lg shadow-sm">
+          <span className="text-xs text-gray-400 font-mono flex items-center mr-1.5 select-none">
             <span className="text-green-400 mr-1">⚡</span>
             <span className="hidden sm:inline">Quick:</span>
           </span>
@@ -497,7 +535,7 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
                 e.stopPropagation();
                 simulateTyping(cmd);
               }}
-              className="px-2 sm:px-2.5 py-0.5 sm:py-1 text-[11px] sm:text-xs font-mono bg-gray-800/80 hover:bg-green-950/60 text-green-400 hover:text-green-300 border border-green-800/70 hover:border-green-400 rounded transition-all duration-150 cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed select-none"
+              className="px-2 sm:px-2.5 py-0.5 sm:py-1 text-[11px] sm:text-xs font-mono bg-gray-800/80 hover:bg-green-950/70 text-green-400 hover:text-green-300 border border-green-800/70 hover:border-green-400 rounded transition-all duration-150 cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed select-none"
               title={`Run command: ${cmd}`}
             >
               <span className="text-green-600 mr-1 select-none">$</span>

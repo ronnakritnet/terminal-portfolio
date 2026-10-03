@@ -125,6 +125,19 @@ export const getFileContent = (
     }
   }
   
+  // If still not found and currentPathArray is not root, try resolving from root
+  if (!result.success && currentPathArray.length > 0) {
+    const rootResult = resolvePath(inputPath, [], fileSystem);
+    if (rootResult.success) {
+      result = rootResult;
+    } else if (!inputPath.endsWith('.md')) {
+      const rootMdResult = resolvePath(`${inputPath}.md`, [], fileSystem);
+      if (rootMdResult.success) {
+        result = rootMdResult;
+      }
+    }
+  }
+  
   if (!result.success || !result.data) {
     return {
       success: false,

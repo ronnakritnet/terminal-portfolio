@@ -520,9 +520,9 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
           </div>
         )}
 
-        {/* Quick Command Action Toolbar */}
-        <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 p-2 sm:p-2.5 my-3 bg-gray-900/60 border border-gray-800/80 rounded-lg shadow-sm">
-          <span className="text-xs text-gray-400 font-mono flex items-center mr-1.5 select-none">
+        {/* Quick Command Action Toolbar (Frameless) */}
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 my-2.5">
+          <span className="text-xs text-gray-400 font-mono flex items-center mr-1 select-none">
             <span className="text-green-400 mr-1">⚡</span>
             <span className="hidden sm:inline">Quick:</span>
           </span>
@@ -535,10 +535,10 @@ const Terminal: React.FC<TerminalProps> = ({ externalCommand }) => {
                 e.stopPropagation();
                 simulateTyping(cmd);
               }}
-              className="px-2 sm:px-2.5 py-0.5 sm:py-1 text-[11px] sm:text-xs font-mono bg-gray-800/80 hover:bg-green-950/70 text-green-400 hover:text-green-300 border border-green-800/70 hover:border-green-400 rounded transition-all duration-150 cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed select-none"
+              className="px-2 py-0.5 sm:py-1 text-[11px] sm:text-xs font-mono bg-gray-900/90 hover:bg-green-950/80 text-green-400 hover:text-green-300 border border-gray-800 hover:border-green-400 rounded transition-all duration-150 cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed select-none"
               title={`Run command: ${cmd}`}
             >
-              <span className="text-green-600 mr-1 select-none">$</span>
+              <span className="text-green-500/70 mr-1 select-none">$</span>
               {cmd}
             </button>
           ))}
